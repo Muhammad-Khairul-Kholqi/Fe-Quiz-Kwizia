@@ -3,16 +3,18 @@
     class="hidden md:flex justify-center py-3 px-5 border-b border-gray-200 bg-white/40 backdrop-blur-md sticky top-0 z-40">
     <div class="w-full max-w-[1300px]">
       <div class="flex items-center justify-between gap-5">
-        <RouterLink to="/">
-          <img :src="LogoText" alt="Logo Kwizia" class="w-[100px]">
-        </RouterLink>
-
-        <ul class="flex items-center gap-5">
-          <RouterLink v-for="link in navLinks" :key="link.path" :to="link.path"
-            class="hover:text-blue-600 transition-colors">
-            {{ link.name }}
+        <div class="flex items-center gap-8">
+          <RouterLink to="/">
+            <img :src="LogoText" alt="Logo Kwizia" class="w-[100px]">
           </RouterLink>
-        </ul>
+          
+          <ul class="flex items-center gap-4">
+            <RouterLink v-for="link in navLinks" :key="link.path" :to="link.path"
+              class="hover:text-blue-600 transition-colors">
+              {{ link.name }}
+            </RouterLink>
+          </ul>
+        </div>
 
         <div class="flex items-center gap-5">
           <RouterLink v-for="button in authButtons" :key="button.path" :to="button.path" :class="button.class"
@@ -92,7 +94,7 @@ import LogoText from "../../../assets/logoText.png";
 const isMenuOpen = ref(false);
 
 const navLinks = [
-  { name: 'Explore', path: '/explore' },
+  { name: 'Home', path: '/explore' },
   { name: 'Blog', path: '/blog' },
   { name: 'Leaderboard', path: '/leaderboard' }
 ];
@@ -104,7 +106,7 @@ const authButtons = [
     class: 'hover:text-blue-600'
   },
   {
-    name: 'Get Started',
+    name: 'Sign Up',
     path: '/getstarted',
     class: 'bg-[#146EF5] hover:bg-blue-600 px-3 py-2 rounded-md text-white border border-[#146EF5]'
   }
