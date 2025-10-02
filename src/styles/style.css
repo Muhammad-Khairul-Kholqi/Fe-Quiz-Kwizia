@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+* {
+  font-family: "WF Visual Sans", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
