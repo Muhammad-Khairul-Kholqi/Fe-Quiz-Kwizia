@@ -1,12 +1,12 @@
 <template>
     <div class="flex min-h-screen">
         <div
-            class="hidden md:flex md:w-1/2 bg-black text-white items-center justify-center p-12 relative overflow-hidden">
-            <div class="border border-[#33322B] p-10 w-full max-w-lg relative">
+            class="hidden md:flex md:w-1/2 bg-gradient-to-br from-black to-blue-800 text-white items-center justify-center p-12 relative overflow-hidden">
+            <div class="bg-black/40 backdrop-blur p-10 w-full max-w-lg relative">
                 <img :src="LogoText" alt="Logo Kwizia" class="w-[150px] mb-8">
 
                 <h1 class="text-4xl font-bold leading-snug mb-4">
-                    Log In Now <br /> and Start Your Quiz Journey
+                    Signin Now <br /> and Start Your Quiz Journey
                 </h1>
 
                 <p class="text-gray-300 text-lg leading-relaxed">
@@ -22,7 +22,7 @@
                     <img :src="LogoText" alt="Logo Kwizia" class="w-[120px] mb-10">
                 </div>
 
-                <h1 class="text-2xl font-semibold text-center mb-5">Log in to your account</h1>
+                <h1 class="text-2xl font-semibold text-center mb-5">Signin to your account</h1>
 
                 <form action="">
                     <div class="mb-4">

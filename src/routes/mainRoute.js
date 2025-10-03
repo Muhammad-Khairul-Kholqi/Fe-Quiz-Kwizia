@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "../views/public/landing/Home.vue";
+import Blog from "../views/public/landing/Blog.vue";
+import Leaderboard from "../views/public/landing/Leaderboard.vue";
+
 import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
 
@@ -16,6 +19,20 @@ const routes = [
                 component: Home,
                 meta: {
                     title: "Best Quiz App",
+                }
+            },
+            {
+                path: "blog",
+                component: Blog,
+                meta: {
+                    title: "Blog",
+                }
+            },
+            {
+                path: "leaderboard",
+                component: Leaderboard,
+                meta: {
+                    title: "Leaderboard",
                 }
             }
         ]

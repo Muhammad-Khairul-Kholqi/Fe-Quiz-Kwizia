@@ -94,7 +94,7 @@ import LogoText from "../../../assets/logoText.png";
 const isMenuOpen = ref(false);
 
 const navLinks = [
-  { name: 'Home', path: '/explore' },
+  { name: 'Home', path: '/' },
   { name: 'Blog', path: '/blog' },
   { name: 'Leaderboard', path: '/leaderboard' }
 ];
@@ -107,7 +107,7 @@ const authButtons = [
   },
   {
     name: 'Sign Up',
-    path: '/getstarted',
+    path: '/signup',
     class: 'bg-[#146EF5] hover:bg-blue-600 px-3 py-2 rounded-md text-white border border-[#146EF5]'
   }
 ];

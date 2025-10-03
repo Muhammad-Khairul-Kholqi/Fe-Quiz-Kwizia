@@ -3,7 +3,7 @@
         <div class="w-full max-w-[1300px]">
             <div class="text-center space-y-2 mt-5">
                 <h1 v-motion="motionAnimation.bottomToTop"
-                    class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold">
+                    class="text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-bold">
                     Make Learning<br> Fun With <span class="text-blue-600">Quizzes</span>
                 </h1>
                 <div v-motion="motionAnimation.bottomToTopDelayed" class="flex justify-center">
@@ -15,7 +15,8 @@
             </div>
 
             <div class="mt-10 flex flex-wrap gap-5 justify-center items-center">
-                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to="" class="group flex justify-center items-center gap-2 border border-gray-200 px-3 py-2 rounded-full">
+                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to=""
+                    class="group flex justify-center items-center gap-2 border border-gray-200 px-3 py-2 rounded-full">
                     <span>Get Started</span>
                     <div class="bg-blue-600 p-1 rounded-full relative overflow-hidden">
                         <ArrowUpRight
@@ -34,11 +35,20 @@
             <div class="mt-10 flex justify-center">
                 <div class="w-full max-w-[800px]">
                     <div class="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 items-center gap-10">
-                        <div v-for="(data, index) in staticsData" :key="index" v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 1200 + index * 200)" class="text-center space-y-1">
+                        <div v-for="(data, index) in staticsData" :key="index"
+                            v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 1200 + index * 200)"
+                            class="text-center space-y-1">
                             <h2 class="text-4xl font-bold">{{ data.number }}</h2>
                             <p class="text-gray-500 text-sm">{{ data.label }}</p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="mt-10 flex justify-center">
+                <div v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 1800)"
+                    class="w-[25px] h-[40px] rounded-full border border-gray-400 flex justify-center items-start pt-2.5">
+                    <div class="w-1.5 h-3 border-2 border-gray-400 rounded-full animate-bounce"></div>
                 </div>
             </div>
         </div>
