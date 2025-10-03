@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Home from "../views/Home.vue";
+import Home from "../views/public/landing/Home.vue";
+import Signin from "../views/public/auth/Signin.vue";
+import Signup from "../views/public/auth/Signup.vue";
 
 import MainLayout from "../layouts/MainLayout.vue";
 
@@ -18,6 +20,20 @@ const routes = [
             }
         ]
         
+    },
+    {
+        path: "/signin",
+        component: Signin,
+        meta: {
+            title: "Signin",
+        }
+    },
+    {
+        path: "/signup",
+        component: Signup,
+        meta: {
+            title: "Signup",
+        }
     }
 ]
 
