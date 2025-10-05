@@ -26,7 +26,8 @@
             </div>
 
             <div class="mt-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-center gap-6">
-                <div v-for="n in 6" :key="n" class="group cursor-pointer">
+                <div v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 200)"
+                    v-for="index in 6" :key="index" class="group cursor-pointer">
                     <div class="relative overflow-hidden rounded-lg border border-gray-200">
                         <img src="https://img.freepik.com/free-vector/gradient-isometric-laptop-technology-background_52683-6159.jpg"
                             alt="" class="w-full h-[200px] object-cover rounded-lg group-hover:scale-110 duration-300">
@@ -43,3 +44,7 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import * as motionAnimation from "../../../components/animation/motionAnimation";
+</script>

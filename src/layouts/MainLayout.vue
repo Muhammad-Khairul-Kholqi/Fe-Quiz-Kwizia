@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div class="min-h-screen flex flex-col">
     <Header />
     <Navigation />
-    <main>
+
+    <main class="flex-grow">
       <router-view />
     </main>
+
     <Footer />
   </div>
 </template>

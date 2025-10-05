@@ -26,7 +26,7 @@
                     </div>
                 </RouterLink>
 
-                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideRight, 1000)" to=""
+                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideRight, 1000)" to="/blog"
                     class="border border-gray-200 px-3 py-2.5 rounded-full hover:bg-gray-50">
                     <span>See Today's Article</span>
                 </RouterLink>
