@@ -15,7 +15,7 @@
                     </div>
                 </div>
 
-                <div v-for="(user, index) in leaderboardData" :key="index" v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 800 + index * 200)"
+                <div v-for="(user, index) in leaderboardData" :key="index" v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 200 + index * 200)"
                     class=" flex justify-between items-center p-3 border-b border-gray-200 min-w-[700px]
                     hover:bg-gray-50 transition-colors">
                     <div class="flex items-center gap-5">

@@ -20,6 +20,7 @@
         <div class="w-full max-w-[1300px]">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div v-for="(item, index) in helpCards" :key="index"
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.scaleIn, 200 + index * 200)"
                     class="bg-white border border-gray-200 shadow-md rounded-xl p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                     <component :is="item.icon" :class="['w-7 h-7 mb-3', item.color]" />
                     <h3 class="text-lg font-semibold">{{ item.title }}</h3>
@@ -30,6 +31,7 @@
             <div class="mt-12">
                 <div class="space-y-4">
                     <div v-for="(faq, index) in faqs" :key="index"
+                        v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 200)"
                         class="bg-white border-b border-gray-200 overflow-hidden">
                         <button @click="toggleFaq(index)"
                             class="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 transition-colors cursor-pointer">
@@ -41,7 +43,8 @@
                                 { 'rotate-180': faq.isOpen }
                             ]" />
                         </button>
-                        <div :class="[ 'overflow-hidden transition-all duration-300', faq.isOpen ? 'max-h-96' : 'max-h-0']">
+                        <div
+                            :class="[ 'overflow-hidden transition-all duration-300', faq.isOpen ? 'max-h-96' : 'max-h-0']">
                             <div class="px-5 pb-5 pt-2 text-gray-600 border-t border-gray-100">
                                 {{ faq.answer }}
                             </div>
@@ -56,6 +59,7 @@
 <script setup>
 import { ref } from 'vue';
 import { User, HelpCircle, Trophy, MessageCircle, ChevronDown } from "lucide-vue-next";
+import * as motionAnimation from "../../../components/animation/motionAnimation"
 
 const helpCards = [
     {
