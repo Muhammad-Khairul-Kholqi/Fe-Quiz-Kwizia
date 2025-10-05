@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/public/landing/Home.vue";
 import Blog from "../views/public/landing/Blog.vue";
 import Leaderboard from "../views/public/landing/Leaderboard.vue";
+import Faq from "../views/public/landing/Faq.vue";
 
 import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
@@ -18,7 +19,7 @@ const routes = [
                 path: "",
                 component: Home,
                 meta: {
-                    title: "Best Quiz App",
+                    title: "Fun Learning and Quiz Platform",
                 }
             },
             {
@@ -33,6 +34,13 @@ const routes = [
                 component: Leaderboard,
                 meta: {
                     title: "Leaderboard",
+                }
+            },
+            {
+                path: "faq",
+                component: Faq,
+                meta: {
+                    title: "Faq",
                 }
             }
         ]

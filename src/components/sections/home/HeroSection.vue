@@ -15,7 +15,7 @@
             </div>
 
             <div class="mt-10 flex flex-wrap gap-5 justify-center items-center">
-                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to=""
+                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to="/signin"
                     class="group flex justify-center items-center gap-2 border border-gray-200 px-3 py-2 rounded-full">
                     <span>Get Started</span>
                     <div class="bg-blue-600 p-1 rounded-full relative overflow-hidden">
