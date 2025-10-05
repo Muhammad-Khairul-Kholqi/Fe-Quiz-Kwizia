@@ -4,6 +4,7 @@ import Home from "../views/public/landing/Home.vue";
 import Blog from "../views/public/landing/Blog.vue";
 import Leaderboard from "../views/public/landing/Leaderboard.vue";
 import Faq from "../views/public/landing/Faq.vue";
+import Contact from "../views/public/landing/Contact.vue";
 
 import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
@@ -41,6 +42,13 @@ const routes = [
                 component: Faq,
                 meta: {
                     title: "Faq",
+                }
+            },
+            {
+                path: "contact-us",
+                component: Contact,
+                meta: {
+                    title: "Contact",
                 }
             }
         ]
