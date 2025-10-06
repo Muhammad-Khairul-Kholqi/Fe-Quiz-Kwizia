@@ -31,21 +31,10 @@
                 <h1 class="text-2xl font-semibold text-center mb-5">Create new account</h1>
 
                 <form action="">
-                    <div class="mb-4">
-                        <input type="email" placeholder="Enter Your Email" v-model="email"
-                            class="w-full border border-gray-300 outline-none text-gray-700 py-3 px-4 placeholder:text-sm rounded-lg transition-colors" />
-                    </div>
+                    <Input v-model="email" type="email" placeholder="Enter Your Email" container-class="mb-4" />
 
-                    <div class="mb-4 relative">
-                        <input :type="showPassword ? 'text' : 'password'" placeholder="Create Password"
-                            v-model="password"
-                            class="w-full border border-gray-300 outline-none text-gray-700 py-3 px-4 pr-12 placeholder:text-sm rounded-lg transition-colors" />
-                        <button type="button" @click="showPassword = !showPassword"
-                            class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-600 cursor-pointer transition-colors">
-                            <EyeOff v-if="showPassword" :size="20" />
-                            <Eye v-else :size="20" />
-                        </button>
-                    </div>
+                    <Input v-model="password" type="password" placeholder="Enter Your Password"
+                        container-class="mb-4" />
 
                     <button
                         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md cursor-pointer transition-colors">
@@ -81,6 +70,7 @@
 import { ref } from 'vue';
 import { Eye, EyeOff } from 'lucide-vue-next';
 import LogoText from "../../../assets/logoText.png";
+import Input from "../../../components/ui/Input.vue";
 import { RouterLink } from 'vue-router';
 
 const showPassword = ref(false);

@@ -31,21 +31,21 @@
                 <div>
                     <label class="block text-sm md:text-base font-medium mb-2">Name</label>
                     <input type="text"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-3 mt-2 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 mt-2 outline-none"
                         placeholder="Enter Your Name">
                 </div>
 
                 <div>
                     <label class="block text-sm md:text-base font-medium mb-2">Email</label>
                     <input type="email"
-                        class="w-full border border-gray-300 rounded-lg px-4 py-3 mt-2 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 mt-2 outline-none"
                         placeholder="Enter Your Email">
                 </div>
 
                 <div>
                     <label class="block text-sm md:text-base font-medium mb-2">Message</label>
                     <textarea
-                        class="w-full border border-gray-300 rounded-lg px-4 py-3 h-[120px] md:h-[150px] mt-2 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all resize-none"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-3 h-[120px] md:h-[150px] mt-2 outline-none resize-none"
                         placeholder="Type Your Message"></textarea>
                 </div>
 

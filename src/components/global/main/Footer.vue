@@ -51,7 +51,6 @@ const footerLinks = ref([
         links: [
             { label: "FAQ", to: "/faq" },
             { label: "Contact", to: "/contact-us" },
-            { label: "Support", to: "/support" },
         ],
     },
     {
