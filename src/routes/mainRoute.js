@@ -9,6 +9,8 @@ import Contact from "../views/public/landing/Contact.vue";
 import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
 
+import Quiz from "../views/private/user/Quiz.vue";
+
 import MainLayout from "../layouts/MainLayout.vue";
 
 const routes = [
@@ -50,10 +52,18 @@ const routes = [
                 meta: {
                     title: "Contact",
                 }
+            },
+            {
+                path: "quiz",
+                component: Quiz,
+                meta: {
+                    title: "Quiz Lists"
+                },
             }
         ]
         
     },
+
     {
         path: "/signin",
         component: Signin,
@@ -67,7 +77,7 @@ const routes = [
         meta: {
             title: "Signup",
         }
-    }
+    },
 ]
 
 const router = createRouter({

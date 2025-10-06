@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import Header from "../components/global/main/Header.vue";
-import Navigation from "../components/global/main/Navigation.vue";
-import Footer from "../components/global/main/Footer.vue";
+import Header from "../components/global/landing/Header.vue";
+import Navigation from "../components/global/Navigation.vue";
+import Footer from "../components/global/landing/Footer.vue";
 </script>

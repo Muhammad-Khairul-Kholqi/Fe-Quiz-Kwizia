@@ -5,18 +5,24 @@
                 <div>
                     <img :src="LogoText" alt="Logo Kwizia" class="w-[120px]" />
                     <p class="text-gray-600 mt-2 max-w-[300px]">
-                        Kwizia is your go-to platform for engaging and interactive quizzes that make learning fun and
-                        exciting.
+                        Kwizia is your go-to platform for engaging and interactive quizzes
+                        that make learning fun and exciting.
                     </p>
                 </div>
 
                 <div v-for="(section, index) in footerLinks" :key="index">
                     <h3 class="font-semibold mb-2">{{ section.title }}</h3>
                     <ul class="flex flex-col space-y-2 text-gray-600">
-                        <RouterLink v-for="(link, idx) in section.links" :key="idx" :to="link.to"
-                            class="hover:text-blue-600 transition-colors">
-                            {{ link.label }}
-                        </RouterLink>
+                        <template v-for="(link, idx) in section.links" :key="idx">
+                            <a v-if="isExternal(link.to)" :href="link.to" target="_blank" rel="noopener noreferrer"
+                                class="hover:text-blue-600 transition-colors">
+                                {{ link.label }}
+                            </a>
+
+                            <RouterLink v-else :to="link.to" class="hover:text-blue-600 transition-colors">
+                                {{ link.label }}
+                            </RouterLink>
+                        </template>
                     </ul>
                 </div>
             </div>
@@ -37,6 +43,8 @@ import { ref } from "vue";
 
 const currentYear = new Date().getFullYear();
 
+const isExternal = (url) => /^(https?:|mailto:|tel:)/.test(url);
+
 const footerLinks = ref([
     {
         title: "Resources",
@@ -56,8 +64,8 @@ const footerLinks = ref([
     {
         title: "Contact Us",
         links: [
-            { label: "(62) 123 456 789", to: "#" },
-            { label: "support@gmail.com", to: "#" },
+            { label: "(62) 123 456 789", to: "tel:+62123456789" },
+            { label: "support@gmail.com", to: "mailto:support@gmail.com" },
         ],
     },
 ]);

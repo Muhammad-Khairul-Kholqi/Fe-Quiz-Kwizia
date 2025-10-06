@@ -7,7 +7,7 @@
           <RouterLink to="/">
             <img :src="LogoText" alt="Logo Kwizia" class="w-[100px]">
           </RouterLink>
-          
+
           <ul class="flex items-center gap-4">
             <RouterLink v-for="link in navLinks" :key="link.path" :to="link.path"
               class="hover:text-blue-600 transition-colors">
@@ -89,14 +89,16 @@
 import { ref, watch } from 'vue';
 import { RouterLink } from "vue-router";
 import { Menu, X, ChevronRight } from 'lucide-vue-next';
-import LogoText from "../../../assets/logoText.png";
+import LogoText from "../../assets/logoText.png";
 
 const isMenuOpen = ref(false);
 
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Blog', path: '/blog' },
-  { name: 'Leaderboard', path: '/leaderboard' }
+  { name: 'Leaderboard', path: '/leaderboard' },
+  { name: 'Quiz', path: '/quiz' },
+  { name: 'History', path: '/history' },
 ];
 
 const authButtons = [

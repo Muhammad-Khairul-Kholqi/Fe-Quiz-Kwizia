@@ -7,22 +7,21 @@
                     <span class="font-bold text-blue-600">Discuss</span> Your Needs And Problems
                 </h1>
 
-                <RouterLink
-                    class="flex items-center gap-4 md:gap-5 mt-6 md:mt-8 hover:text-blue-600 transition-colors group">
+                <a href="" class="flex items-center gap-4 md:gap-5 mt-6 md:mt-8 hover:text-blue-600 transition-colors group">
                     <Mail class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
                     <div>
                         <p class="text-sm md:text-base font-medium">Email</p>
                         <p class="text-sm md:text-base text-gray-600 group-hover:text-blue-600">support@gmail.com</p>
                     </div>
-                </RouterLink>
+                </a>
 
-                <RouterLink class="flex items-center gap-4 md:gap-5 mt-5 hover:text-blue-600 transition-colors group">
+                <a href="" class="flex items-center gap-4 md:gap-5 mt-5 hover:text-blue-600 transition-colors group">
                     <Phone class="w-6 h-6 md:w-8 md:h-8 flex-shrink-0" />
                     <div>
                         <p class="text-sm md:text-base font-medium">Phone number</p>
                         <p class="text-sm md:text-base text-gray-600 group-hover:text-blue-600">(62) 123 456 789</p>
                     </div>
-                </RouterLink>
+                </a>
             </div>
 
             <form action=""
