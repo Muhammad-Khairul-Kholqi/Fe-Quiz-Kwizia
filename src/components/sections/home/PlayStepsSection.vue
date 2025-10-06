@@ -10,7 +10,8 @@
                 </p>
             </div>
             <div class="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-8 lg:gap-6">
-                <div v-for="(step, index) in steps" :key="index" class="text-center space-y-4 relative">
+                <div v-for="(step, index) in steps" :key="index" class="text-center space-y-4 relative"
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTopDelayed, 200 + index * 200)">
                     <div class="flex justify-center">
                         <div
                             class="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-3xl font-bold relative z-10">
