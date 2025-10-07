@@ -95,10 +95,10 @@ const isMenuOpen = ref(false);
 
 const navLinks = [
   { name: 'Home', path: '/' },
+  { name: 'Quiz', path: '/app/quiz' },
   { name: 'Blog', path: '/blog' },
   { name: 'Leaderboard', path: '/leaderboard' },
-  { name: 'Quiz', path: '/quiz' },
-  { name: 'History', path: '/history' },
+  { name: 'History', path: '/app/history' },
 ];
 
 const authButtons = [

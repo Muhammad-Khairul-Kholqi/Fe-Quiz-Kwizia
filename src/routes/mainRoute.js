@@ -10,6 +10,7 @@ import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
 
 import Quiz from "../views/private/user/Quiz.vue";
+import History from "../views/private/user/History.vue";
 
 import MainLayout from "../layouts/MainLayout.vue";
 
@@ -24,6 +25,13 @@ const routes = [
                 meta: {
                     title: "Fun Learning and Quiz Platform",
                 }
+            },
+            {
+                path: "app/quiz",
+                component: Quiz,
+                meta: {
+                    title: "Quiz Lists"
+                },
             },
             {
                 path: "blog",
@@ -54,12 +62,12 @@ const routes = [
                 }
             },
             {
-                path: "quiz",
-                component: Quiz,
+                path: "app/history",
+                component: History,
                 meta: {
-                    title: "Quiz Lists"
-                },
-            }
+                    title: "History",
+                }
+            },
         ]
         
     },

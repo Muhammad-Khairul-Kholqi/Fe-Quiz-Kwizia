@@ -1,10 +1,10 @@
 <template>
     <div class="hidden lg:block p-5 bg-gray-50 rounded-xl lg:sticky lg:top-20 space-y-6">
-        <h1 class="font-bold text-xl text-blue-600">Filter</h1>
+        <h1 class="font-bold text-xl">Select <span class="text-blue-600">Filter</span></h1>
 
         <div v-if="activeFilters.length" class="flex flex-wrap gap-2 mt-3">
             <div v-for="(filter, index) in activeFilters" :key="index"
-                class="flex items-center gap-2 border border-blue-600 text-blue-600 px-3 py-1.5 rounded-full text-sm font-medium">
+                class="flex items-center gap-2 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full text-sm font-medium">
                 <span>{{ filter }}</span>
                 <X size="16" class="cursor-pointer hover:text-blue-700" @click="$emit('remove-filter', filter)" />
             </div>

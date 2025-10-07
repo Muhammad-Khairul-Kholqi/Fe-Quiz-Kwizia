@@ -1,11 +1,8 @@
 <template>
     <div class="flex justify-center p-5">
         <div class="w-full max-w-[1500px]">
-            <!-- Container utama dengan grid layout -->
             <div>
-                <!-- Baris pertama: Filter dan Quizzes -->
                 <div class="flex flex-col lg:flex-row gap-5">
-                    <!-- Filter Section - 25% pada lg -->
                     <div class="w-full lg:w-[25%]">
                         <FilterSection :open-dropdown="openDropdown" :selected-subject="selectedSubject"
                             :selected-questions="selectedQuestions" :active-filters="activeFilters"
@@ -14,7 +11,6 @@
                             @update:show-filter-modal="showFilterModal = $event" />
                     </div>
 
-                    <!-- Quizzes Section - 50% pada lg -->
                     <div class="w-full lg:w-[45%]">
                         <QuizzesSection :search-query="searchQuery" :selected-sort="selectedSort"
                             :filtered-quizzes="filteredQuizzes" :open-dropdown="openDropdown"
@@ -22,21 +18,14 @@
                             @update:search-query="searchQuery = $event" @show-filter-modal="showFilterModal = true" />
                     </div>
 
-                    <!-- Popular Section - 25% pada lg (hanya di desktop) -->
                     <div class="hidden lg:block lg:w-[30%]">
                         <PopularSection :popular-quizzes="popularQuizzes" />
                     </div>
                 </div>
 
-                <!-- Baris kedua: Popular Section full width pada lg (hanya di mobile) -->
                 <div class="lg:hidden mt-5">
                     <PopularSection :popular-quizzes="popularQuizzes" />
                 </div>
-
-                <!-- Popular Section full width pada lg -->
-                <!-- <div class="hidden lg:block w-full mt-5">
-                    <PopularSection :popular-quizzes="popularQuizzes" custom-class="w-full" />
-                </div> -->
             </div>
         </div>
     </div>
