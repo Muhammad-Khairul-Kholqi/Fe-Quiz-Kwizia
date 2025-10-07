@@ -1,6 +1,6 @@
 <template>
     <footer class="flex justify-center border-t border-gray-200 mt-10 px-5 pt-10 pb-5">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="flex justify-between items-start gap-10 flex-wrap">
                 <div>
                     <img :src="LogoText" alt="Logo Kwizia" class="w-[120px]" />

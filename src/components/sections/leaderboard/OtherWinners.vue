@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center p-5 mt-10">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="scrollbar-hide w-full overflow-x-auto">
                 <div class="flex justify-between items-center font-semibold p-3 min-w-[700px]">
                     <div class="flex items-center gap-5">

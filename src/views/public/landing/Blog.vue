@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center p-5">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="mt-5 text-center">
                 <h1 class="text-4xl font-bold">Kwizia Quiz Blog</h1>
                 <p class="mt-2 text-gray-600 text-lg">Stay updated with the latest news, tips, and insights from Kwizia

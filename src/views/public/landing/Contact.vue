@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center px-5 py-10">
-        <div class="w-full max-w-[1300px] flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-5">
+        <div class="w-full max-w-[1500px] flex flex-col lg:flex-row items-start lg:items-center gap-8 lg:gap-5">
             <div class="w-full lg:w-1/2 p-6 md:p-10">
                 <h3 class="text-gray-500 text-sm md:text-base">WE'RE HERE TO HELP YOU</h3>
                 <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl w-full max-w-[500px] tracking-wide mt-2">

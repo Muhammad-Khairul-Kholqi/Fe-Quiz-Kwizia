@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center p-5">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="text-center space-y-2 mt-5">
                 <h1 v-motion="motionAnimation.bottomToTop"
                     class="text-4xl sm:text-6xl md:text-7xl lg:text-7xl font-bold">

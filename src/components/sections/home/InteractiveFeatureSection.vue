@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center p-5 py-20">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="space-y-2 mb-16">
                 <h2 class="text-4xl font-bold"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 200)">

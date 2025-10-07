@@ -1,6 +1,6 @@
 <template>
     <div class="flex justify-center px-5 py-10 bg-gradient-to-b from-blue-50 to-white">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <h1 class="text-4xl text-center">How can we help you?</h1>
             <div class="flex justify-center mt-7 px-4">
                 <div
@@ -17,7 +17,7 @@
     </div>
 
     <div class="flex justify-center p-5">
-        <div class="w-full max-w-[1300px]">
+        <div class="w-full max-w-[1500px]">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div v-for="(item, index) in helpCards" :key="index"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.scaleIn, 200 + index * 200)"

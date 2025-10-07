@@ -1,7 +1,7 @@
 <template>
   <nav
     class="hidden md:flex justify-center py-3 px-5 border-b border-gray-200 bg-white/40 backdrop-blur-md sticky top-0 z-40">
-    <div class="w-full max-w-[1300px]">
+    <div class="w-full max-w-[1500px]">
       <div class="flex items-center justify-between gap-5">
         <div class="flex items-center gap-8">
           <RouterLink to="/">
@@ -28,7 +28,7 @@
 
   <nav
     class="md:hidden flex justify-center py-3 px-5 border-b border-gray-200 bg-white/40 backdrop-blur-md sticky top-0 z-40">
-    <div class="w-full max-w-[1300px]">
+    <div class="w-full max-w-[1500px]">
       <div class="flex items-center justify-between">
         <RouterLink to="/">
           <img :src="LogoText" alt="Logo Kwizia" class="w-[100px]">
@@ -51,7 +51,7 @@
 
   <div v-if="isMenuOpen" class="md:hidden fixed inset-0 bg-white z-50 overflow-y-auto flex flex-col">
     <div class="flex justify-center py-3 px-5 border-b border-gray-200">
-      <div class="w-full max-w-[1300px]">
+      <div class="w-full max-w-[1500px]">
         <div class="flex items-center justify-between">
           <RouterLink to="/" @click="closeMenu">
             <img :src="LogoText" alt="Logo Kwizia" class="w-[100px]">
