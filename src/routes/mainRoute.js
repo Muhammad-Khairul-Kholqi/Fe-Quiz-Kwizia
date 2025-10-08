@@ -10,7 +10,7 @@ import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
 
 import Quiz from "../views/private/user/Quiz.vue";
-import History from "../views/private/user/History.vue";
+import Profile from "../views/private/user/Profile.vue";
 
 import MainLayout from "../layouts/MainLayout.vue";
 
@@ -62,10 +62,10 @@ const routes = [
                 }
             },
             {
-                path: "app/history",
-                component: History,
+                path: "app/profile",
+                component: Profile,
                 meta: {
-                    title: "History",
+                    title: "Profile",
                 }
             },
         ]

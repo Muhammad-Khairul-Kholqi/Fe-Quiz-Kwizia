@@ -1,12 +1,7 @@
 <template>
-    <div class="flex justify-center p-4 sm:p-6">
-        <div class="w-full max-w-[1300px] space-y-6 sm:space-y-8">
-            <div class="text-center">
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Your Quiz History</h1>
-                <p class="text-gray-500 mt-1 text-sm sm:text-base">See how far you've come in your learning journey!</p>
-            </div>
-
-            <div class="flex justify-center">
+    <div class="flex justify-center p-5 mt-10">
+        <div class="w-full max-w-[1500px] space-y-6 sm:space-y-8">
+            <div class="flex justify-start">
                 <div class="w-full max-w-[700px] flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                     <div class="flex-1 border border-gray-200 p-3 flex items-center gap-2 rounded-lg">
                         <Search class="w-5 h-5 text-gray-600 flex-shrink-0" />
@@ -92,7 +87,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { Clock, Search, ChevronDown } from "lucide-vue-next";
-import motionAnimation from "../../../components/animation/motionAnimation";
+import motionAnimation from '../../animation/motionAnimation';
 
 const searchQuery = ref('');
 const isDropdownOpen = ref(false);
