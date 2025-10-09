@@ -98,7 +98,7 @@ const navLinks = [
   { name: 'Quiz', path: '/app/quiz' },
   { name: 'Blog', path: '/blog' },
   { name: 'Leaderboard', path: '/leaderboard' },
-  { name: 'History', path: '/app/history' },
+  { name: 'Profile', path: '/app/profile' },
 ];
 
 const authButtons = [
