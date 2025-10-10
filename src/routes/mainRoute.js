@@ -1,20 +1,29 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+// landing before login
 import Home from "../views/public/landing/Home.vue";
 import Blog from "../views/public/landing/Blog.vue";
 import Leaderboard from "../views/public/landing/Leaderboard.vue";
 import Faq from "../views/public/landing/Faq.vue";
 import Contact from "../views/public/landing/Contact.vue";
 
+// auth
 import Signin from "../views/public/auth/Signin.vue";
 import Signup from "../views/public/auth/Signup.vue";
 
+// landing after login
 import Quiz from "../views/private/user/Quiz.vue";
 import Profile from "../views/private/user/Profile.vue";
 
+// admin
+import Dashboard from "../views/private/admin/Dashboard.vue";
+
+// layout
 import MainLayout from "../layouts/MainLayout.vue";
+import AdminLayout from "../layouts/AdminLayout.vue";
 
 const routes = [
+    // landing before login
     {
         path: "/",
         component: MainLayout,
@@ -25,13 +34,6 @@ const routes = [
                 meta: {
                     title: "Fun Learning and Quiz Platform",
                 }
-            },
-            {
-                path: "app/quiz",
-                component: Quiz,
-                meta: {
-                    title: "Quiz Lists"
-                },
             },
             {
                 path: "blog",
@@ -61,17 +63,47 @@ const routes = [
                     title: "Contact",
                 }
             },
+        ]
+    },
+
+    // landing after login
+    {
+        path: "/app/",
+        component: MainLayout,
+        children: [
             {
-                path: "app/profile",
+                path: "quiz",
+                component: Quiz,
+                meta: {
+                    title: "Quiz Lists"
+                },
+            },
+            {
+                path: "profile",
                 component: Profile,
                 meta: {
                     title: "Profile",
                 }
             },
         ]
-        
     },
 
+    // admin
+    {
+        path: "/private/admin/",
+        component: AdminLayout,
+        children: [
+            {
+                path: "dashboard",
+                component: Dashboard,
+                meta: {
+                    title: "Dashboard"
+                }
+            }
+        ]
+    },
+
+    // auth
     {
         path: "/signin",
         component: Signin,

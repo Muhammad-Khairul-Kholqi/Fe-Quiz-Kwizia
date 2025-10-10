@@ -13,8 +13,7 @@
                         <button @click="toggleDropdown"
                             class="w-full border border-gray-200 p-3 flex items-center justify-between gap-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                             <span class="text-gray-600 text-sm sm:text-base">{{ selectedFilter }}</span>
-                            <ChevronDown class="w-5 h-5 text-gray-600 flex-shrink-0 transition-transform"
-                                :class="{ 'rotate-180': isDropdownOpen }" />
+                            <ChevronDown class="w-5 h-5 text-gray-600 flex-shrink-0 transition-transform" :class="{ 'rotate-180': isDropdownOpen }" />
                         </button>
 
                         <div v-if="isDropdownOpen"
@@ -29,45 +28,74 @@
                 </div>
             </div>
 
-            <div v-if="filteredData.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div v-if="filteredData.length > 0" class="space-y-3">
                 <div v-for="(quiz, index) in filteredData" :key="index"
-                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 200)"
-                    class="bg-white border border-gray-200 rounded-xl p-4 sm:p-6 flex flex-col justify-between">
-                    <div class="flex items-center gap-3 sm:gap-4 mb-4">
-                        <img :src="quiz.avatar" :alt="quiz.quizName"
-                            class="w-12 h-12 sm:w-15 sm:h-15 rounded-xl object-cover flex-shrink-0" />
-                        <div class="min-w-0">
-                            <h3 class="font-bold text-base sm:text-lg text-gray-800 truncate">{{ quiz.quizName }}</h3>
-                            <p class="text-gray-400 text-xs sm:text-sm">{{ quiz.category }}</p>
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 100)"
+                    class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                        <!-- Avatar & Info -->
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                            <img :src="quiz.avatar" :alt="quiz.quizName"
+                                class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0" />
+                            <div class="min-w-0 flex-1">
+                                <h3 class="font-bold text-lg sm:text-xl text-gray-800 truncate mb-1">{{ quiz.quizName }}
+                                </h3>
+                                <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg font-medium">{{
+                                        quiz.category }}</span>
+                                    <span>•</span>
+                                    <span>{{ quiz.date }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Stats Grid -->
+                        <div class="flex items-center gap-3 sm:gap-4">
+                            <div
+                                class="text-center px-3 py-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl min-w-[70px]">
+                                <p class="text-xs text-blue-600 font-medium mb-1">Points</p>
+                                <p class="font-bold text-blue-600 text-lg">{{ quiz.point }}</p>
+                            </div>
+
+                            <div class="text-center px-3 py-2 bg-gray-50 rounded-xl min-w-[70px]">
+                                <p class="text-xs text-gray-500 font-medium mb-1">Questions</p>
+                                <p class="font-bold text-gray-700 text-lg">{{ quiz.question }}</p>
+                            </div>
+
+                            <div class="hidden sm:block text-center px-3 py-2 bg-green-50 rounded-xl min-w-[70px]">
+                                <p class="text-xs text-green-600 font-medium mb-1">Correct</p>
+                                <p class="font-bold text-green-600 text-lg">{{ quiz.correctAnswer }}</p>
+                            </div>
+
+                            <div class="hidden sm:block text-center px-3 py-2 bg-red-50 rounded-xl min-w-[70px]">
+                                <p class="text-xs text-red-500 font-medium mb-1">Wrong</p>
+                                <p class="font-bold text-red-500 text-lg">{{ quiz.wrongAnswer }}</p>
+                            </div>
+
+                            <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl">
+                                <Clock class="w-4 h-4 text-gray-500" />
+                                <span class="font-semibold text-gray-700">{{ quiz.time }}s</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2 sm:gap-3 text-sm text-gray-700 mb-4">
-                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center">
-                            <p class="text-xs text-gray-500">Points</p>
-                            <p class="font-bold text-blue-600 text-base sm:text-lg">{{ quiz.point }}</p>
+                    <!-- Mobile Stats -->
+                    <div class="sm:hidden flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
+                        <div class="flex items-center gap-4">
+                            <div class="text-center">
+                                <p class="text-xs text-green-600 font-medium mb-1">Correct</p>
+                                <p class="font-bold text-green-600">{{ quiz.correctAnswer }}</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs text-red-500 font-medium mb-1">Wrong</p>
+                                <p class="font-bold text-red-500">{{ quiz.wrongAnswer }}</p>
+                            </div>
                         </div>
-                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center">
-                            <p class="text-xs text-gray-500">Questions</p>
-                            <p class="font-bold text-base sm:text-lg">{{ quiz.question }}</p>
+                        <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg">
+                            <Clock class="w-4 h-4 text-gray-500" />
+                            <span class="font-semibold text-gray-700 text-sm">{{ quiz.time }}s</span>
                         </div>
-                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center">
-                            <p class="text-xs text-gray-500">Correct</p>
-                            <p class="font-bold text-green-600 text-base sm:text-lg">{{ quiz.correctAnswer }}</p>
-                        </div>
-                        <div class="bg-gray-50 rounded-xl p-2 sm:p-3 text-center">
-                            <p class="text-xs text-gray-500">Wrong</p>
-                            <p class="font-bold text-red-500 text-base sm:text-lg">{{ quiz.wrongAnswer }}</p>
-                        </div>
-                    </div>
-
-                    <div
-                        class="flex items-center justify-between text-gray-500 text-xs sm:text-sm mt-auto pt-3 border-t border-gray-100">
-                        <div class="flex items-center gap-1">
-                            <Clock class="w-3 h-3 sm:w-4 sm:h-4" />
-                            <span>{{ quiz.time }}s</span>
-                        </div>
-                        <span>{{ quiz.date }}</span>
                     </div>
                 </div>
             </div>
