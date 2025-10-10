@@ -8,17 +8,17 @@
 
                 <div class="text-center md:text-left">
                     <span class="font-bold text-blue-600 text-lg">#5</span>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-center md:justify-start gap-2">
                         <h1 class="font-bold text-3xl mt-2">Sarah Johnson</h1>
                         <button class="cursor-pointer hover:text-blue-600 transition-colors">
                             <Pencil class="w-5 h-5" />
                         </button>
                     </div>
 
-                    <div class="flex items-center justify-center md:justify-start gap-3 mt-3 text-gray-600">
+                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3 text-gray-600">
                         <span>sarah@gmail.com</span>
                         <div class="bg-gray-500 p-0.5 rounded-full"></div>
-                        <span>Joined 12 August 2012</span>
+                        <span>12 August 2012</span>
                     </div>
 
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-5">
