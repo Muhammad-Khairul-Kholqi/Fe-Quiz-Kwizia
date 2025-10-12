@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // landing before login
 import Home from "../views/public/landing/Home.vue";
 import Blog from "../views/public/landing/Blog.vue";
+import DetaiBlog from "../views/public/landing/DetaiBlog.vue";
 import Leaderboard from "../views/public/landing/Leaderboard.vue";
 import Faq from "../views/public/landing/Faq.vue";
 import Contact from "../views/public/landing/Contact.vue";
@@ -40,6 +41,13 @@ const routes = [
                 component: Blog,
                 meta: {
                     title: "Blog",
+                }
+            },
+            {
+                path: "detail-blog",
+                component: DetaiBlog,
+                meta: {
+                    title: "Detail Blog",
                 }
             },
             {

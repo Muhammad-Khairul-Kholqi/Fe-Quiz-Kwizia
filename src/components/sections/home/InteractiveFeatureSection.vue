@@ -3,18 +3,18 @@
         <div class="w-full max-w-[1500px]">
             <div class="space-y-2 mb-16">
                 <h2 class="text-4xl font-bold"
-                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 200)">
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200)">
                     Play, Compete, <span class="text-blue-600">Win</span>
                 </h2>
                 <p class="text-gray-600 max-w-[600px]"
-                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 400)">
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 400)">
                     Kwizia is your go-to platform for engaging and interactive quizzes
                 </p>
             </div>
 
             <div class="grid lg:grid-cols-2 gap-8">
                 <div class="lg:row-span-2 border border-gray-200 rounded-3xl p-10 overflow-hidden"
-                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 600)">
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 600)">
                     <div>
                         <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-6">
                             <Trophy class="w-5 h-5 text-white" />

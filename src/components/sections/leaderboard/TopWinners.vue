@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-center px-5 py-10 bg-[#F8F9FD]">
+    <div class="flex justify-center px-5 py-10 bg-[#F8F9FD]/70">
         <div class="w-full max-w-[1500px]">
             <div class="flex flex-wrap justify-center items-center gap-3 md:gap-5">
                 <div class="w-full max-w-[280px] border-3 border-white bg-white rounded-xl order-2 md:order-1 shadow-lg"
