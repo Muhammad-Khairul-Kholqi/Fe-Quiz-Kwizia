@@ -15,7 +15,8 @@
             </div>
 
             <div class="mt-10 flex flex-wrap gap-5 justify-center items-center">
-                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to="/signin"
+                <RouterLink v-if="!isAuthenticated"
+                    v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)" to="/signin"
                     class="group flex justify-center items-center gap-2 border border-gray-200 px-3 py-2 rounded-full">
                     <span>Get Started</span>
                     <div class="bg-blue-600 p-1 rounded-full relative overflow-hidden">
@@ -26,9 +27,16 @@
                     </div>
                 </RouterLink>
 
-                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideRight, 1000)" to="/blog"
-                    class="border border-gray-200 px-3 py-2.5 rounded-full hover:bg-gray-50">
+                <RouterLink v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 1000)"
+                    to="/blog"
+                    class="group flex justify-center items-center gap-2 border border-gray-200 px-3 py-2 rounded-full">
                     <span>See Today's Article</span>
+                    <div class="bg-blue-600 p-1 rounded-full relative overflow-hidden">
+                        <ArrowUpRight
+                            class="w-5 h-5 text-white relative z-10 transition-all duration-500 group-hover:translate-x-0 group-hover:translate-y-0 translate-x-[-150%] translate-y-[150%]" />
+                        <ArrowUpRight
+                            class="w-5 h-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-500 group-hover:translate-x-[150%] group-hover:translate-y-[-150%]" />
+                    </div>
                 </RouterLink>
             </div>
 
@@ -56,9 +64,26 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { ArrowUpRight, Users } from 'lucide-vue-next';
 import * as motionAnimation from "../../animation/motionAnimation"
+import authApi from '../../../api/authApi';
+
+const router = useRouter();
+const isAuthenticated = ref(true);
+
+const checkAuthStatus = () => {
+    isAuthenticated.value = authApi.isAuthenticated();
+};
+
+watch(() => router.currentRoute.value, () => {
+    checkAuthStatus();
+});
+
+onMounted(() => {
+    checkAuthStatus();
+});
 
 const staticsData = [
     { number: '100K+', label: 'USERS WORLDWIDE' },

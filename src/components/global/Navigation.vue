@@ -110,6 +110,14 @@
         </li>
 
         <li v-if="isAuthenticated">
+          <RouterLink to="/app/profile" @click="closeMenu"
+            class="flex items-center justify-between py-4 px-4 hover:bg-gray-50 rounded-lg">
+            <span class="text-base">Profile</span>
+            <ChevronRight :size="20" />
+          </RouterLink>
+        </li>
+
+        <li v-if="isAuthenticated">
           <button @click="handleLogout"
             class="w-full flex items-center justify-between py-4 px-4 hover:bg-gray-50 rounded-lg text-red-600">
             <span class="text-base">Logout</span>
