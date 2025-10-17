@@ -25,7 +25,7 @@
                 <div class="cursor-pointer hover:text-blue-600 transition-colors">Announcements</div>
             </div>
 
-            <div class="mt-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-center gap-6">
+            <RouterLink to="/detail-blog" class="mt-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-center gap-6">
                 <div v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 200)"
                     v-for="index in 6" :key="index" class="group cursor-pointer">
                     <div class="relative overflow-hidden rounded-lg border border-gray-200">
@@ -40,11 +40,13 @@
                     </p>
                     <div class="text-gray-600 mt-2">Jan 21, 2024</div>
                 </div>
-            </div>
+            </RouterLink>
         </div>
     </div>
 </template>
 
 <script setup>
 import * as motionAnimation from "../../../components/animation/motionAnimation";
+import { RouterLink } from "vue-router";
 </script>
+

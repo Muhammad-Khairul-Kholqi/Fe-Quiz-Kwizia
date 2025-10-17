@@ -30,32 +30,20 @@
 
                 <h1 class="text-2xl font-semibold text-center mb-5">Create new account</h1>
 
-                <form action="">
-                    <Input v-model="email" type="email" placeholder="Enter Your Email" container-class="mb-4" />
+                <form @submit.prevent="handleRegister">
+                    <Input v-model="formData.username" type="text" placeholder="Enter Your Username"
+                        container-class="mb-4" :disabled="isLoading" required />
 
-                    <Input v-model="password" type="password" placeholder="Enter Your Password"
-                        container-class="mb-4" />
+                    <Input v-model="formData.password" type="password" placeholder="Enter Your Password"
+                        container-class="mb-4" :disabled="isLoading" required />
 
-                    <button
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md cursor-pointer transition-colors">
-                        Signup
+                    <button type="submit" :disabled="isLoading"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md cursor-pointer transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed">
+                        {{ isLoading ? 'Loading...' : 'Signup' }}
                     </button>
                 </form>
 
-                <div class="flex items-center my-6">
-                    <div class="flex-1 border-t border-gray-300"></div>
-                    <span class="px-4 text-gray-500 text-sm">or</span>
-                    <div class="flex-1 border-t border-gray-300"></div>
-                </div>
-
-                <button
-                    class="w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg mb-4 flex items-center justify-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"
-                        class="w-5 h-5" />
-                    <span>Continue With Google</span>
-                </button>
-
-                <div class="text-center text-gray-600">
+                <div class="text-center text-gray-600 mt-4">
                     <span>Already have an account? </span>
                     <RouterLink to="/signin" class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
                         Signin
@@ -68,19 +56,49 @@
 
 <script setup>
 import { ref } from 'vue';
-import { Eye, EyeOff } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 import LogoText from "../../../assets/logoText.png";
 import Input from "../../../components/ui/Input.vue";
-import { RouterLink } from 'vue-router';
+import authApi from '../../../api/authApi';
 
-const showPassword = ref(false);
-const name = ref('');
-const email = ref('');
-const password = ref('');
+const router = useRouter();
+const isLoading = ref(false);
+
+const formData = ref({
+    username: '',
+    password: ''
+});
 
 const features = [
     'Fun & interactive quizzes',
     'Compete and share with friends',
     'Track your progress easily',
 ];
+
+const handleRegister = async () => {
+    if (!formData.value.username || !formData.value.password) {
+        return;
+    }
+
+    try {
+        isLoading.value = true;
+
+        await authApi.register({
+            username: formData.value.username,
+            password: formData.value.password
+        });
+
+        formData.value.username = '';
+        formData.value.password = '';
+
+        setTimeout(() => {
+            router.push('/signin');
+        }, 2000);
+
+    } catch (error) {
+        console.error('Registration error:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 </script>

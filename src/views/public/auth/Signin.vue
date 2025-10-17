@@ -23,32 +23,20 @@
 
                 <h1 class="text-2xl font-semibold text-center mb-5">Signin to your account</h1>
 
-                <form action="">
-                    <Input v-model="email" type="email" placeholder="Enter Your Email" container-class="mb-4" />
+                <form @submit.prevent="handleLogin">
+                    <Input v-model="formData.username" type="text" placeholder="Enter Your Username"
+                        container-class="mb-4" :disabled="isLoading" required />
 
-                    <Input v-model="password" type="password" placeholder="Enter Your Password"
-                        container-class="mb-4" />
+                    <Input v-model="formData.password" type="password" placeholder="Enter Your Password"
+                        container-class="mb-4" :disabled="isLoading" required />
 
-                    <button
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md cursor-pointer transition-colors">
-                        Signin
+                    <button type="submit" :disabled="isLoading"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-md cursor-pointer transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed">
+                        {{ isLoading ? 'Loading...' : 'Signin' }}
                     </button>
                 </form>
 
-                <div class="flex items-center my-6">
-                    <div class="flex-1 border-t border-gray-300"></div>
-                    <span class="px-4 text-gray-500 text-sm">or</span>
-                    <div class="flex-1 border-t border-gray-300"></div>
-                </div>
-
-                <button
-                    class="w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg mb-4 flex items-center justify-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors">
-                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo"
-                        class="w-5 h-5" />
-                    <span>Continue With Google</span>
-                </button>
-
-                <div class="text-center text-gray-600">
+                <div class="text-center text-gray-600 mt-4">
                     <span>Don't have an account? </span>
                     <RouterLink to="/signup" class="text-blue-600 hover:text-blue-700 font-medium transition-colors">
                         Signup
@@ -61,10 +49,47 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { RouterLink } from 'vue-router';
 import Input from "../../../components/ui/Input.vue";
 import LogoText from "../../../assets/logoText.png";
+import authApi from '../../../api/authApi';
 
-const email = ref('');
-const password = ref('');
+const router = useRouter();
+const isLoading = ref(false);
+
+const formData = ref({
+    username: '',
+    password: ''
+});
+
+const handleLogin = async () => {
+    if (!formData.value.username || !formData.value.password) {
+        return;
+    }
+
+    try {
+        isLoading.value = true;
+
+        const response = await authApi.login({
+            username: formData.value.username,
+            password: formData.value.password
+        });
+
+        if (response.data.user.role === 'admin') {
+            setTimeout(() => {
+                router.push('/private/admin/dashboard');
+            }, 1500);
+        } else {
+            setTimeout(() => {
+                router.push('/');
+            }, 1500);
+        }
+
+    } catch (error) {
+        console.error('Login error:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
 </script>

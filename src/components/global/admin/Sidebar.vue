@@ -62,7 +62,7 @@
         </nav>
 
         <div class="p-4">
-            <button
+            <button @click="handleLogout"
                 class="flex w-full items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-gray-100 text-red-600 cursor-pointer">
                 <LogOut class="w-4 h-4" />
                 <span>Log Out</span>
@@ -72,8 +72,9 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import { RouterLink } from "vue-router";
+import { ref, watch, onMounted } from "vue";
+import { RouterLink, useRouter } from "vue-router"; 
+import authApi from "../../../api/authApi";
 import {
     X,
     LayoutDashboard,
@@ -89,10 +90,12 @@ import SingleLogo from "../../../assets/singleLogo.png";
 const props = defineProps({
     open: { type: Boolean, required: true },
 });
+const emit = defineEmits(["close"]);
 
-const emit = defineEmits(['close']);
-
+const router = useRouter();
 const openDropdowns = ref({});
+const isAuthenticated = ref(false);
+const currentUser = ref(null);
 
 const toggleDropdown = (name) => {
     openDropdowns.value[name] = !openDropdowns.value[name];
@@ -101,20 +104,46 @@ const toggleDropdown = (name) => {
 const handleNavigation = (navigate) => {
     navigate();
     if (window.innerWidth < 768) {
-        emit('close');
+        emit("close");
     }
 };
+
+const checkAuthStatus = () => {
+    isAuthenticated.value = authApi.isAuthenticated();
+    if (isAuthenticated.value) {
+        currentUser.value = authApi.getCurrentUser();
+    }
+};
+
+const handleLogout = () => {
+    authApi.logout();
+    isAuthenticated.value = false;
+    currentUser.value = null;
+    emit("close"); 
+    router.push("/"); 
+};
+
+watch(
+    () => router.currentRoute.value,
+    () => {
+        checkAuthStatus();
+    }
+);
+
+onMounted(() => {
+    checkAuthStatus();
+});
 
 const menuItems = [
     {
         name: "Dashboard",
         icon: LayoutDashboard,
-        to: "/private/page/admin/dashboard"
+        to: "/private/page/admin/dashboard",
     },
     {
         name: "Users",
         icon: Users,
-        to: "/private/page/admin/users"
+        to: "/private/page/admin/users",
     },
     {
         name: "Blog",
@@ -136,8 +165,8 @@ const menuItems = [
         name: "Help",
         icon: HelpCircle,
         children: [
-            { name: "FAQ", to: "/private/page/admin/quizzes" },
-            { name: "Contact", to: "/private/page/admin/categories" },
+            { name: "FAQ", to: "/private/page/admin/faq" },
+            { name: "Contact", to: "/private/page/admin/contact" },
         ],
     },
 ];
