@@ -112,7 +112,7 @@ const routes = [
         path: "/private/admin/",
         component: AdminLayout,
         meta: {
-            requiresAuth: true,
+            // requiresAuth: true,
             role: 'admin'
         },
         children: [{
@@ -120,7 +120,7 @@ const routes = [
             component: Dashboard,
             meta: {
                 title: "Dashboard",
-                requiresAuth: true,
+                // requiresAuth: true,
                 role: 'admin'
             }
         }]

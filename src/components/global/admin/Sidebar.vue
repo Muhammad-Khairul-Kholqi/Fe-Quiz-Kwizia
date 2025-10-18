@@ -6,7 +6,7 @@
     ]">
         <div class="flex items-center justify-between p-4 border-b border-gray-200">
             <div class="flex items-center justify-center gap-2">
-                <img :src="SingleLogo" alt="Logo Kwizia" class="w-[31px]" />
+                <img :src="SingleLogo" alt="Logo Kwizia" class="w-[32px]" />
                 <span class="font-semibold tracking-wide">Kwizia</span>
             </div>
             <button class="md:hidden text-gray-600" @click="$emit('close')">
