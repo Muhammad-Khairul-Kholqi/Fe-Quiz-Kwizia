@@ -1,6 +1,6 @@
 <template>
     <div :class="[
-        'animate-pulse bg-gray-200 dark:bg-gray-700 overflow-hidden relative',
+        'animate-pulse bg-gray-200 overflow-hidden relative',
         shapeClass,
     ]" :style="styleObject">
         <div
