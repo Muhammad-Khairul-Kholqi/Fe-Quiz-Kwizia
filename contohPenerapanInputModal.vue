@@ -48,14 +48,28 @@ const columns = [
 
 const users = ref([
     { id: 1, question: 'Bagaimana cara mendaftar?', answer: 'Klik tombol daftar di pojok kanan atas' },
-    { id: 2, question: 'Apa itu Vue 3?', answer: 'Vue 3 adalah framework JavaScript progresif'},
-    { id: 3, question: 'Bagaimana cara membayar?', answer: 'Anda bisa membayar melalui transfer bank atau e-wallet'},
+    { id: 2, question: 'Apa itu Vue 3?', answer: 'Vue 3 adalah framework JavaScript progresif' },
+    { id: 3, question: 'Bagaimana cara membayar?', answer: 'Anda bisa membayar melalui transfer bank atau e-wallet' },
 ]);
 
 const searchQuery = ref('');
 const isModalOpen = ref(false);
 const modalMode = ref('add');
 const selectedItem = ref({});
+
+const categoryOptions = [
+    { label: 'General', value: 'general' },
+    { label: 'Technical', value: 'technical' },
+    { label: 'Billing', value: 'billing' },
+    { label: 'Account', value: 'account' },
+    { label: 'Support', value: 'support' }
+];
+
+const statusOptions = [
+    { label: 'Active', value: 'active' },
+    { label: 'Inactive', value: 'inactive' },
+    { label: 'Draft', value: 'draft' }
+];
 
 const modalTitle = computed(() => {
     return 'FAQ';
@@ -73,6 +87,12 @@ const filteredUsers = computed(() => {
 
 const modalFields = [
     {
+        name: 'image',
+        type: 'image',
+        label: 'FAQ Image',
+        required: false
+    },
+    {
         name: 'question',
         type: 'text',
         label: 'Question',
@@ -80,14 +100,47 @@ const modalFields = [
         required: true
     },
     {
-        name: 'answer',
-        type: 'text',
-        label: 'Answer',
-        placeholder: 'Enter FAQ answer...',
-        required: true
+        name: 'category',
+        type: 'dropdown',
+        label: 'Category',
+        placeholder: 'Select category...',
+        required: true,
+        options: categoryOptions,
+        optionLabel: 'label',
+        optionValue: 'value',
+        searchable: true
     },
+    {
+        name: 'status',
+        type: 'dropdown',
+        label: 'Status',
+        placeholder: 'Select status...',
+        required: true,
+        options: statusOptions,
+        optionLabel: 'label',
+        optionValue: 'value',
+        searchable: false
+    },
+    {
+        name: 'answer',
+        type: 'textarea',
+        label: 'Short Answer',
+        placeholder: 'Enter brief answer...',
+        rows: 3,
+        required: true,
+        maxLength: 200,
+        hint: 'Maximum 200 characters'
+    },
+    {
+        name: 'detailedAnswer',
+        type: 'editor',
+        label: 'Detailed Answer',
+        placeholder: 'Enter detailed answer with formatting...',
+        required: false
+    }
 ];
 
+// Methods
 const openAddModal = () => {
     modalMode.value = 'add';
     selectedItem.value = {};
@@ -107,6 +160,7 @@ const closeModal = () => {
 
 const handleSubmit = ({ mode, data }) => {
     if (mode === 'add') {
+        // Add new item
         const newItem = {
             id: users.value.length + 1,
             ...data
@@ -114,6 +168,7 @@ const handleSubmit = ({ mode, data }) => {
         users.value.push(newItem);
         console.log('Added:', newItem);
     } else {
+        // Update existing item
         const index = users.value.findIndex(u => u.id === selectedItem.value.id);
         if (index !== -1) {
             users.value[index] = {

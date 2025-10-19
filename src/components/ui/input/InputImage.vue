@@ -9,7 +9,7 @@
             <input ref="fileInput" type="file" accept="image/*" @change="handleFileChange" class="hidden" />
 
             <div @click="triggerFileInput"
-                class="relative w-full aspect-square max-w-md mx-auto border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors cursor-pointer overflow-hidden bg-gray-50"
+                class="relative w-full aspect-video max-w-md mx-auto border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors cursor-pointer overflow-hidden bg-gray-50"
                 :class="{ 'border-blue-500 bg-blue-50': isDragging }" @dragover.prevent="isDragging = true"
                 @dragleave.prevent="isDragging = false" @drop.prevent="handleDrop">
                 <img v-if="imageUrl" :src="imageUrl" alt="Preview" class="w-full h-full object-cover" />
@@ -19,11 +19,11 @@
                     <p class="text-sm text-center">
                         Click or drag & drop the image here
                     </p>
-                    <p class="text-xs text-center mt-1">PNG, JPG, GIF hingga 10MB</p>
+                    <p class="text-xs text-center mt-1">PNG, JPG, GIF until 1MB</p>
                 </div>
 
                 <button v-if="imageUrl" @click.stop="removeImage"
-                    class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg">
+                    class="absolute top-2 right-2 bg-black/50 text-white rounded-full p-2 hover:bg-black/70 transition-colors shadow-lg cursor-pointer">
                     <X :size="20" />
                 </button>
             </div>

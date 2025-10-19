@@ -5,7 +5,7 @@
             <span v-if="required" class="text-red-500">*</span>
         </label>
 
-        <div class="border border-gray-300 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all bg-white"
+        <div class="border border-gray-300 rounded-lg overflow-hidden bg-white"
             :class="{
                 'border-red-500 focus-within:ring-red-500 focus-within:border-red-500': error,
                 'bg-gray-50 cursor-not-allowed': disabled
@@ -24,7 +24,7 @@
                 @mouseup="updateActiveFormats" @keyup="updateActiveFormats" :class="{
                     'cursor-not-allowed': disabled,
                     'bg-gray-50': disabled
-                }" class="min-h-[200px] max-h-[400px] overflow-y-auto p-4 outline-none prose prose-sm max-w-none"
+                }" class="min-h-[150px] max-h-[400px] overflow-y-auto p-4 outline-none prose prose-sm max-w-none"
                 :data-placeholder="placeholder"></div>
         </div>
 
