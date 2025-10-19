@@ -1,6 +1,6 @@
 <template>
     <aside :class="[
-        'fixed inset-y-0 left-0 z-[50] w-60 bg-white border-r border-gray-200 transform transition-transform duration-200',
+        'fixed inset-y-0 left-0 z-[40] w-60 bg-white border-r border-gray-200 transform transition-transform duration-200',
         open ? 'translate-x-0' : '-translate-x-full',
         'md:translate-x-0 md:static md:shadow-none'
     ]">

@@ -23,6 +23,7 @@ import Profile from "../views/private/user/Profile.vue";
 
 // admin
 import Dashboard from "../views/private/admin/Dashboard.vue";
+import FAQData from "../views/private/admin/FAQData.vue";
 
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
@@ -112,18 +113,29 @@ const routes = [
         path: "/private/admin/",
         component: AdminLayout,
         meta: {
-            // requiresAuth: true,
+            requiresAuth: true,
             role: 'admin'
         },
-        children: [{
-            path: "dashboard",
-            component: Dashboard,
-            meta: {
-                title: "Dashboard",
-                // requiresAuth: true,
-                role: 'admin'
+        children: [
+            {
+                path: "dashboard",
+                component: Dashboard,
+                meta: {
+                    title: "Dashboard",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "faq",
+                component: FAQData,
+                meta: {
+                    title: "FAQ",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
             }
-        }]
+        ],
     },
 
     // auth routes (only accessible when not logged in)

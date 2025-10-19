@@ -69,8 +69,8 @@ const stats = ref([
         label: "Completed Quizzes",
         value: 300,
         percent: "9.7%",
-        change: 27,
-        trend: "up",
+        change: -27,
+        trend: "down",
         icon: MessageCircleQuestionMark,
     },
 ])
