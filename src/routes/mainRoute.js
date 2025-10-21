@@ -25,6 +25,7 @@ import Profile from "../views/private/user/Profile.vue";
 import Dashboard from "../views/private/admin/Dashboard.vue";
 import FAQData from "../views/private/admin/FAQData.vue";
 import CategoryBlog from "../views/private/admin/CategoryBlog.vue";
+import CategoryQuiz from "../views/private/admin/CategoryQuiz.vue";
 
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
@@ -141,6 +142,15 @@ const routes = [
                 component: CategoryBlog,
                 meta: {
                     title: "Category Blog",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "category-quiz",
+                component: CategoryQuiz,
+                meta: {
+                    title: "Category Quiz",
                     requiresAuth: true,
                     role: 'admin'
                 }

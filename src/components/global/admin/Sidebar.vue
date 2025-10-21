@@ -184,7 +184,7 @@ const menuItems = [
         icon: Layers2,
         children: [
             { name: "All Quizzes", to: "/private/admin/quizzes" },
-            { name: "Category", to: "/private/admin/categories" },
+            { name: "Category", to: "/private/admin/category-quiz" },
         ],
     },
     {
