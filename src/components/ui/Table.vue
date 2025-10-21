@@ -8,8 +8,14 @@
                     </th>
                 </tr>
             </thead>
-
-            <tbody v-if="data.length">
+            <tbody v-if="isLoading">
+                <tr>
+                    <td :colspan="columns.length" class="text-center py-8">
+                        <span class="text-gray-600">Loading...</span>
+                    </td>
+                </tr>
+            </tbody>
+            <tbody v-else-if="data.length">
                 <tr v-for="(row, i) in data" :key="i">
                     <td v-for="(col, j) in columns" :key="j" class="p-5 border-b border-gray-200 text-sm text-gray-800">
                         <slot :name="`cell-${col.key}`" :row="row" :value="row[col.key]" :index="i">
@@ -18,7 +24,6 @@
                     </td>
                 </tr>
             </tbody>
-
             <tbody v-else>
                 <tr>
                     <td :colspan="columns.length" class="text-center py-6 text-gray-500">
@@ -39,6 +44,10 @@ const props = defineProps({
     data: {
         type: Array,
         default: () => [],
+    },
+    isLoading: {
+        type: Boolean,
+        default: false,
     },
 })
 </script>

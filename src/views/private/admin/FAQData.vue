@@ -11,7 +11,7 @@
             </button>
         </div>
 
-        <Table :columns="columns" :data="filteredFaqs" class="mt-5">
+        <Table :columns="columns" :data="filteredFaqs" :isLoading="isLoading" class="mt-5">
             <template #cell-no="{ index }">
                 {{ index + 1 }}
             </template>
@@ -85,7 +85,6 @@ const modalFields = [
     },
 ];
 
-// Fetch FAQs from API
 const fetchFaqs = async () => {
     try {
         isLoading.value = true;
@@ -126,7 +125,6 @@ const handleSubmit = async ({ mode, data }) => {
             await updateFaq(selectedItem.value.id, data);
         }
 
-        // Refresh data after successful operation
         await fetchFaqs();
         closeModal();
     } catch (error) {
@@ -156,7 +154,6 @@ const deleteFaqItem = async (row) => {
     }
 };
 
-// Fetch data on component mount
 onMounted(() => {
     fetchFaqs();
 });
