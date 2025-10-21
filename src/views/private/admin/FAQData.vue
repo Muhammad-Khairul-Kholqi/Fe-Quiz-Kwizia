@@ -11,9 +11,9 @@
             </button>
         </div>
 
-        <Table :columns="columns" :data="filteredFaqs" :isLoading="isLoading" class="mt-5">
+        <Table :columns="columns" :data="paginatedFaqs" :isLoading="isLoading" class="mt-5">
             <template #cell-no="{ index }">
-                {{ index + 1 }}
+                {{ (currentPage - 1) * perPage + index + 1 }}
             </template>
 
             <template #cell-actions="{ row }">
@@ -26,6 +26,11 @@
                     </button>
                 </div>
             </template>
+
+            <template #pagination>
+                <Pagination v-if="filteredFaqs.length > 0" :currentPage="currentPage"
+                    :totalEntries="filteredFaqs.length" :perPage="perPage" @update:currentPage="updatePage" />
+            </template>
         </Table>
 
         <AddEditModal :isOpen="isModalOpen" :mode="modalMode" :title="modalTitle" :fields="modalFields"
@@ -34,12 +39,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import Table from '../../../components/ui/Table.vue';
+import Pagination from '../../../components/ui/Pagination.vue';
 import { Search } from 'lucide-vue-next';
 import AddEditModal from '../../../components/modal/AddEditModal.vue';
 import { getFaq, createFaq, updateFaq, deleteFaq } from '../../../api/FAQApi';
 import Swal from 'sweetalert2';
+
+const route = useRoute();
+const router = useRouter();
 
 const columns = [
     { label: 'No', key: 'no' },
@@ -55,6 +65,9 @@ const modalMode = ref('add');
 const selectedItem = ref({});
 const isLoading = ref(false);
 
+const currentPage = ref(1);
+const perPage = ref(10); 
+
 const modalTitle = computed(() => {
     return 'FAQ';
 });
@@ -67,6 +80,35 @@ const filteredFaqs = computed(() => {
         faq.answer.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
+
+const paginatedFaqs = computed(() => {
+    const start = (currentPage.value - 1) * perPage.value;
+    const end = start + perPage.value;
+    return filteredFaqs.value.slice(start, end);
+});
+
+const updatePage = (page) => {
+    currentPage.value = page;
+    router.push({
+        query: {
+            ...route.query,
+            page: page
+        }
+    });
+};
+
+const resetPage = () => {
+    updatePage(1);
+};
+
+watch(searchQuery, () => {
+    resetPage();
+});
+
+watch(() => route.query.page, (newPage) => {
+    const page = parseInt(newPage) || 1;
+    currentPage.value = page;
+}, { immediate: true });
 
 const modalFields = [
     {
