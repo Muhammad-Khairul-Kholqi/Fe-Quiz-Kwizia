@@ -17,8 +17,12 @@
         <nav class="p-4 space-y-2 border-b border-gray-200 overflow-y-auto scrollbar-hide">
             <div v-for="(item, index) in menuItems" :key="index">
                 <div v-if="item.children">
-                    <button @click="toggleDropdown(item.name)"
-                        class="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors text-gray-700 cursor-pointer">
+                    <button @click="toggleDropdown(item.name)" :class="[
+                        'flex items-center justify-between w-full px-3 py-2 rounded-lg transition-colors cursor-pointer',
+                        isParentActive(item)
+                            ? 'text-blue-600'
+                            : 'text-gray-700 hover:bg-gray-100'
+                    ]">
                         <div class="flex items-center gap-3">
                             <component :is="item.icon" class="w-5 h-5" />
                             <span class="font-medium">{{ item.name }}</span>
@@ -37,7 +41,7 @@
                                 <a :href="href" @click="handleNavigation(navigate)" :class="[
                                     'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
                                     isActive
-                                        ? 'bg-purple-500 text-white font-medium'
+                                        ? 'bg-blue-500 text-white font-medium'
                                         : 'text-gray-600 hover:bg-gray-100'
                                 ]">
                                     <span>{{ sub.name }}</span>
@@ -51,7 +55,7 @@
                     <a :href="href" @click="handleNavigation(navigate)" :class="[
                         'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors',
                         isActive
-                            ? 'bg-purple-500 text-white font-medium'
+                            ? 'bg-blue-500 text-white font-medium'
                             : 'text-gray-700 hover:bg-gray-100'
                     ]">
                         <component :is="item.icon" class="w-5 h-5" />
@@ -101,6 +105,12 @@ const toggleDropdown = (name) => {
     openDropdowns.value[name] = !openDropdowns.value[name];
 };
 
+const isParentActive = (item) => {
+    if (!item.children) return false;
+    const currentPath = router.currentRoute.value.path;
+    return item.children.some(child => currentPath.startsWith(child.to));
+};
+
 const handleNavigation = (navigate) => {
     navigate();
     if (window.innerWidth < 768) {
@@ -127,46 +137,56 @@ watch(
     () => router.currentRoute.value,
     () => {
         checkAuthStatus();
+        menuItems.forEach(item => {
+            if (item.children && isParentActive(item)) {
+                openDropdowns.value[item.name] = true;
+            }
+        });
     }
 );
 
 onMounted(() => {
     checkAuthStatus();
+    menuItems.forEach(item => {
+        if (item.children && isParentActive(item)) {
+            openDropdowns.value[item.name] = true;
+        }
+    });
 });
 
 const menuItems = [
     {
         name: "Dashboard",
         icon: LayoutDashboard,
-        to: "/private/page/admin/dashboard",
+        to: "/private/admin/dashboard",
     },
     {
         name: "Users",
         icon: Users,
-        to: "/private/page/admin/users",
+        to: "/private/admin/users",
     },
     {
         name: "Blog",
         icon: Newspaper,
         children: [
-            { name: "Articles", to: "/private/page/admin/articles" },
-            { name: "Category", to: "/private/page/admin/category-blog" },
+            { name: "Articles", to: "/private/admin/articles" },
+            { name: "Category", to: "/private/admin/category-blog" },
         ],
     },
     {
         name: "Quiz",
         icon: Layers2,
         children: [
-            { name: "All Quizzes", to: "/private/page/admin/quizzes" },
-            { name: "Category", to: "/private/page/admin/categories" },
+            { name: "All Quizzes", to: "/private/admin/quizzes" },
+            { name: "Category", to: "/private/admin/categories" },
         ],
     },
     {
         name: "Help",
         icon: HelpCircle,
         children: [
-            { name: "FAQ", to: "/private/page/admin/faq" },
-            { name: "Contact", to: "/private/page/admin/contact" },
+            { name: "FAQ", to: "/private/admin/faq" },
+            { name: "Contact", to: "/private/admin/contact" },
         ],
     },
 ];

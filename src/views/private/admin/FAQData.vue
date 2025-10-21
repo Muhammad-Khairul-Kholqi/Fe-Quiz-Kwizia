@@ -11,7 +11,7 @@
             </button>
         </div>
 
-        <Table :columns="columns" :data="filteredUsers" class="mt-5">
+        <Table :columns="columns" :data="filteredFaqs" class="mt-5">
             <template #cell-no="{ index }">
                 {{ index + 1 }}
             </template>
@@ -21,7 +21,7 @@
                     <button @click="openEditModal(row)" class="text-blue-600 hover:underline text-sm cursor-pointer">
                         Update
                     </button>
-                    <button @click="deleteUser(row)" class="text-red-600 hover:underline text-sm cursor-pointer">
+                    <button @click="deleteFaqItem(row)" class="text-red-600 hover:underline text-sm cursor-pointer">
                         Delete
                     </button>
                 </div>
@@ -34,10 +34,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import Table from '../../../components/ui/Table.vue';
 import { Search } from 'lucide-vue-next';
 import AddEditModal from '../../../components/modal/AddEditModal.vue';
+import { getFaq, createFaq, updateFaq, deleteFaq } from '../../../api/FAQApi';
+import Swal from 'sweetalert2';
 
 const columns = [
     { label: 'No', key: 'no' },
@@ -46,28 +48,23 @@ const columns = [
     { label: 'Action', key: 'actions' },
 ];
 
-const users = ref([
-    { id: 1, question: 'Bagaimana cara mendaftar?', answer: 'Klik tombol daftar di pojok kanan atas' },
-    { id: 2, question: 'Apa itu Vue 3?', answer: 'Vue 3 adalah framework JavaScript progresif'},
-    { id: 3, question: 'Bagaimana cara membayar?', answer: 'Anda bisa membayar melalui transfer bank atau e-wallet'},
-]);
-
+const faqs = ref([]);
 const searchQuery = ref('');
 const isModalOpen = ref(false);
 const modalMode = ref('add');
 const selectedItem = ref({});
+const isLoading = ref(false);
 
 const modalTitle = computed(() => {
     return 'FAQ';
 });
 
-const filteredUsers = computed(() => {
-    if (!searchQuery.value) return users.value;
+const filteredFaqs = computed(() => {
+    if (!searchQuery.value) return faqs.value;
 
-    return users.value.filter(user =>
-        user.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        user.answer.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        user.category.toLowerCase().includes(searchQuery.value.toLowerCase())
+    return faqs.value.filter(faq =>
+        faq.question.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        faq.answer.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
 
@@ -88,6 +85,22 @@ const modalFields = [
     },
 ];
 
+// Fetch FAQs from API
+const fetchFaqs = async () => {
+    try {
+        isLoading.value = true;
+        const response = await getFaq();
+
+        if (response.success && response.data) {
+            faqs.value = response.data;
+        }
+    } catch (error) {
+        console.error('Error fetching FAQs:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
 const openAddModal = () => {
     modalMode.value = 'add';
     selectedItem.value = {};
@@ -105,35 +118,46 @@ const closeModal = () => {
     selectedItem.value = {};
 };
 
-const handleSubmit = ({ mode, data }) => {
-    if (mode === 'add') {
-        const newItem = {
-            id: users.value.length + 1,
-            ...data
-        };
-        users.value.push(newItem);
-        console.log('Added:', newItem);
-    } else {
-        const index = users.value.findIndex(u => u.id === selectedItem.value.id);
-        if (index !== -1) {
-            users.value[index] = {
-                ...users.value[index],
-                ...data
-            };
-            console.log('Updated:', users.value[index]);
+const handleSubmit = async ({ mode, data }) => {
+    try {
+        if (mode === 'add') {
+            await createFaq(data);
+        } else {
+            await updateFaq(selectedItem.value.id, data);
         }
-    }
 
-    closeModal();
-};
-
-const deleteUser = (row) => {
-    if (confirm(`Are you sure you want to delete "${row.question}"?`)) {
-        const index = users.value.findIndex(u => u.id === row.id);
-        if (index !== -1) {
-            users.value.splice(index, 1);
-            console.log('Deleted:', row);
-        }
+        // Refresh data after successful operation
+        await fetchFaqs();
+        closeModal();
+    } catch (error) {
+        console.error('Error submitting FAQ:', error);
     }
 };
+
+const deleteFaqItem = async (row) => {
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: `Do you want to delete "${row.question}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3b82f6',
+        cancelButtonColor: '#ef4444',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+        try {
+            await deleteFaq(row.id);
+            await fetchFaqs();
+        } catch (error) {
+            console.error('Error deleting FAQ:', error);
+        }
+    }
+};
+
+// Fetch data on component mount
+onMounted(() => {
+    fetchFaqs();
+});
 </script>

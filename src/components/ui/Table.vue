@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-x-auto w-full">
         <table class="min-w-full overflow-hidden">
-            <thead class="bg-gray-50 text-gray-700 border-b border-gray-200 text-sm">
+            <thead class="bg-gray-100 text-gray-700 text-sm">
                 <tr>
                     <th v-for="(col, index) in columns" :key="index" class="p-5 text-left font-semibold">
                         {{ col.label }}
