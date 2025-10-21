@@ -88,6 +88,7 @@ import {
     Users,
     HelpCircle,
     ChevronRight,
+    Drama
 } from "lucide-vue-next";
 import SingleLogo from "../../../assets/singleLogo.png";
 
@@ -164,6 +165,11 @@ const menuItems = [
         name: "Users",
         icon: Users,
         to: "/private/admin/users",
+    },
+    {
+        name: "Avatar",
+        icon: Drama,
+        to: "/private/admin/avatar",
     },
     {
         name: "Blog",

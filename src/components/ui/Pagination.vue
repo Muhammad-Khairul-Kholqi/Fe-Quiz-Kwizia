@@ -11,7 +11,7 @@
                     ? 'bg-gray-50 text-gray-600 cursor-not-allowed'
                     : 'border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer'
             ]">
-                Previous
+                Prev
             </button>
 
             <button @click="goToNext" :disabled="currentPage === totalPages" :class="[
