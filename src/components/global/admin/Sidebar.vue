@@ -1,6 +1,6 @@
 <template>
     <aside :class="[
-        'fixed inset-y-0 left-0 z-[40] w-60 bg-white border-r border-gray-200 transform transition-transform duration-200',
+        'fixed inset-y-0 left-0 z-40 w-60 bg-white border-r border-gray-200 transform transition-transform duration-200',
         open ? 'translate-x-0' : '-translate-x-full',
         'md:translate-x-0 md:static md:shadow-none'
     ]">
@@ -73,7 +73,7 @@
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { RouterLink, useRouter } from "vue-router"; 
+import { RouterLink, useRouter } from "vue-router";
 import authApi from "../../../api/authApi";
 import {
     X,
@@ -119,8 +119,8 @@ const handleLogout = () => {
     authApi.logout();
     isAuthenticated.value = false;
     currentUser.value = null;
-    emit("close"); 
-    router.push("/"); 
+    emit("close");
+    router.push("/");
 };
 
 watch(
