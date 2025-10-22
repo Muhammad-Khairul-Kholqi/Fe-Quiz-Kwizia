@@ -1,24 +1,22 @@
 <template>
-    <div class="flex justify-center p-5 bg-[#F8F9FD]/70">
+    <div class="flex justify-center px-5 py-10 bg-[#F8F9FD]/70">
         <div class="w-full max-w-[1500px]">
-            <span class="text-gray-600 text-sm font-bold">PROFILE</span>
-
             <div v-if="isLoading"
-                class="flex flex-col md:flex-row justify-center items-center gap-5 mt-5 text-center md:text-left">
+                class="flex flex-col md:flex-row gap-5 items-center md:items-center justify-center md:justify-start text-center md:text-left">
                 <loading-skeleton :width="'250px'" :height="'250px'" class="rounded-xl" />
                 <div class="w-full max-w-lg space-y-3 flex flex-col items-center md:items-start">
                     <loading-skeleton :width="'100px'" :height="'25px'" class="rounded-lg" />
                     <loading-skeleton :width="'150px'" :height="'30px'" class="rounded-lg" />
                     <loading-skeleton :width="'200px'" :height="'20px'" class="rounded-lg" />
 
-                    <div class="flex flex-wrap justify-center md:justify-start gap-3 mt-5">
+                    <div class="flex flex-wrap gap-3 mt-5 justify-center md:justify-start">
                         <loading-skeleton v-for="n in 3" :key="n" :width="'150px'" :height="'50px'"
                             class="rounded-full" />
                     </div>
                 </div>
             </div>
 
-            <div v-else class="flex flex-col md:flex-row items-center gap-5 mt-5">
+            <div v-else class="flex flex-col md:flex-row items-center gap-5">
                 <div class="relative group">
                     <img :src="profileData.avatars?.image_url || 'https://placehold.co/250x250'" alt="Profile Picture"
                         class="w-[250px] h-[250px] rounded-xl object-cover cursor-pointer transition-all duration-200 group-hover:brightness-75"
@@ -36,8 +34,11 @@
 
                     <p class="font-bold text-blue-600"># {{ profileData.rank || 'Unranked' }}</p>
 
-                    <div class="flex items-center justify-center md:justify-start gap-2">
+                    <div class="flex items-center justify-center md:justify-start gap-1">
                         <h1 class="font-bold text-3xl mt-2">{{ profileData.username || 'User' }}</h1>
+                        <button @click="openEditModal()">
+                            <Pencil class="w-5 h-5 cursor-pointer hover:text-blue-600" />
+                        </button>
                     </div>
 
                     <p class="mt-3 text-gray-600">{{ formatDate(profileData.created_at) }}</p>
@@ -60,6 +61,9 @@
 
         <AvatarSelectorModal :isOpen="isAvatarModalOpen" :currentAvatarId="profileData.avatars?.id"
             @close="closeAvatarModal" @updated="handleAvatarUpdated" />
+
+        <AddEditModal :isOpen="isModalOpen" :mode="modalMode" :title="modalTitle" :fields="modalFields"
+            :initialData="selectedItem" @close="closeModal" @submit="handleSubmit" />
     </div>
 </template>
 
@@ -69,10 +73,15 @@ import { Coins, CircleQuestionMark, LaptopMinimalCheck, Pencil } from 'lucide-vu
 import AvatarSelectorModal from '../../../components/modal/AvatarSelectorModal.vue';
 import { getMyProfile } from '../../../api/userProfileApi';
 import loadingSkeleton from '../../../components/ui/LoadingSkeleton.vue';
+import AddEditModal from '../../../components/modal/AddEditModal.vue';
 
 const profileData = ref({});
 const isLoading = ref(false);
 const isAvatarModalOpen = ref(false);
+
+const isModalOpen = ref(false);
+const modalMode = ref('add');
+const selectedItem = ref({});
 
 const stats = computed(() => [
     {
@@ -97,6 +106,20 @@ const stats = computed(() => [
         icon: LaptopMinimalCheck,
     },
 ]);
+
+const modalTitle = computed(() => {
+    return 'Profile';
+});
+
+const modalFields = [
+    {
+        name: 'username',
+        type: 'text',
+        label: 'Username',
+        placeholder: 'Enter your username',
+        required: true
+    },
+];
 
 const fetchProfile = async () => {
     try {
@@ -130,8 +153,46 @@ const closeAvatarModal = () => {
     isAvatarModalOpen.value = false;
 };
 
+
 const handleAvatarUpdated = async () => {
     await fetchProfile();
+};
+
+const openEditModal = () => {
+    modalMode.value = 'edit';
+    isModalOpen.value = true;
+
+    selectedItem.value = {
+        username: profileData.value.username,
+    };
+};
+
+
+const closeModal = () => {
+    isModalOpen.value = false;
+    selectedItem.value = {};
+};
+
+const handleSubmit = ({ mode, data }) => {
+    if (mode === 'add') {
+        const newItem = {
+            id: users.value.length + 1,
+            ...data
+        };
+        users.value.push(newItem);
+        console.log('Added:', newItem);
+    } else {
+        const index = users.value.findIndex(u => u.id === selectedItem.value.id);
+        if (index !== -1) {
+            users.value[index] = {
+                ...users.value[index],
+                ...data
+            };
+            console.log('Updated:', users.value[index]);
+        }
+    }
+
+    closeModal();
 };
 
 onMounted(() => {

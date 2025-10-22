@@ -140,7 +140,6 @@ const modalFields = [
     }
 ];
 
-// Methods
 const openAddModal = () => {
     modalMode.value = 'add';
     selectedItem.value = {};
@@ -160,7 +159,6 @@ const closeModal = () => {
 
 const handleSubmit = ({ mode, data }) => {
     if (mode === 'add') {
-        // Add new item
         const newItem = {
             id: users.value.length + 1,
             ...data
@@ -168,7 +166,6 @@ const handleSubmit = ({ mode, data }) => {
         users.value.push(newItem);
         console.log('Added:', newItem);
     } else {
-        // Update existing item
         const index = users.value.findIndex(u => u.id === selectedItem.value.id);
         if (index !== -1) {
             users.value[index] = {

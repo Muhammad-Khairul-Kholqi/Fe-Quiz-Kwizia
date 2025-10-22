@@ -118,19 +118,3 @@ export const getPublicProfile = async (userId) => {
         throw error
     }
 }
-
-export const getMyRank = async () => {
-    try {
-        const response = await apiClient.get('/profile/rank')
-        console.log('Get My Rank response:', response.data)
-        return response.data
-    } catch (error) {
-        console.error('Error fetching My Rank:', error)
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Failed to fetch Rank'
-        })
-        throw error
-    }
-}

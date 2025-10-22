@@ -29,7 +29,7 @@
                 <tbody v-else>
                     <tr>
                         <td :colspan="columns.length" class="text-center py-6 text-gray-500">
-                            Tidak ada data.
+                            No data
                         </td>
                     </tr>
                 </tbody>
