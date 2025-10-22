@@ -3,8 +3,19 @@
         <div class="w-full max-w-[1500px]">
             <span class="text-gray-600 text-sm font-bold">PROFILE</span>
 
-            <div v-if="isLoading" class="flex justify-center items-center py-20">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <div v-if="isLoading"
+                class="flex flex-col md:flex-row justify-center items-center gap-5 mt-5 text-center md:text-left">
+                <loading-skeleton :width="'250px'" :height="'250px'" class="rounded-xl" />
+                <div class="w-full max-w-lg space-y-3 flex flex-col items-center md:items-start">
+                    <loading-skeleton :width="'100px'" :height="'25px'" class="rounded-lg" />
+                    <loading-skeleton :width="'150px'" :height="'30px'" class="rounded-lg" />
+                    <loading-skeleton :width="'200px'" :height="'20px'" class="rounded-lg" />
+
+                    <div class="flex flex-wrap justify-center md:justify-start gap-3 mt-5">
+                        <loading-skeleton v-for="n in 3" :key="n" :width="'150px'" :height="'50px'"
+                            class="rounded-full" />
+                    </div>
+                </div>
             </div>
 
             <div v-else class="flex flex-col md:flex-row items-center gap-5 mt-5">
@@ -57,23 +68,11 @@ import { ref, computed, onMounted } from 'vue';
 import { Coins, CircleQuestionMark, LaptopMinimalCheck, Pencil } from 'lucide-vue-next';
 import AvatarSelectorModal from '../../../components/modal/AvatarSelectorModal.vue';
 import { getMyProfile } from '../../../api/userProfileApi';
+import loadingSkeleton from '../../../components/ui/LoadingSkeleton.vue';
 
 const profileData = ref({});
 const isLoading = ref(false);
 const isAvatarModalOpen = ref(false);
-
-// const getRankDisplay = computed(() => {
-//     if (!profileData.value.rank) return 'Unranked';
-//     return `#${profileData.value.rank} Rank`;
-// });
-
-// const getRankEmoji = computed(() => {
-//     const rank = profileData.value.rank;
-//     if (rank === 1) return '🥇';
-//     if (rank === 2) return '🥈';
-//     if (rank === 3) return '🥉';
-//     return '';
-// });
 
 const stats = computed(() => [
     {
@@ -106,7 +105,7 @@ const fetchProfile = async () => {
 
         if (response.success && response.data) {
             profileData.value = response.data;
-            console.log('Profile with rank:', profileData.value); // Debug
+            console.log('Profile with rank:', profileData.value); 
         }
     } catch (error) {
         console.error('Error fetching profile:', error);

@@ -13,8 +13,13 @@
                         </button>
                     </div>
 
-                    <div v-if="isLoading" class="flex justify-center items-center py-20">
-                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+                    <div v-if="isLoading" class="grid grid-cols-3 items-center gap-2">
+                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="150px" />
                     </div>
 
                     <div v-else-if="avatars.length === 0" class="text-center py-20 text-gray-500">
@@ -24,26 +29,16 @@
 
                     <div v-else class="max-h-[60vh] overflow-y-auto">
                         <div class="grid grid-cols-3 gap-2">
-                            <div v-for="avatar in avatars" :key="avatar.id" @click="selectAvatar(avatar)" :class="[
-                                'relative cursor-pointer rounded-xl overflow-hidden transition-all duration-200 border-4',
-                                selectedAvatarId === avatar.id
-                                    ? 'border-blue-500 scale-95'
-                                    : 'border-transparent'
-                            ]">
+                            <div v-for="avatar in avatars" :key="avatar.id" @click="selectAvatar(avatar)"
+                                class="relative cursor-pointer rounded-xl overflow-hidden transition-all duration-200">
                                 <img :src="avatar.image_url" :alt="avatar.name"
-                                    class="w-full aspect-square object-cover" />
+                                    class="w-full aspect-square object-cover hover:scale-125 duration-300" />
 
                                 <div v-if="selectedAvatarId === avatar.id"
-                                    class="absolute inset-0 bg-blue-500/20 flex items-center justify-center">
-                                    <div class="bg-blue-500 rounded-full p-2">
+                                    class="absolute inset-0 flex items-center justify-center">
+                                    <div class="bg-black/50 rounded-full p-2">
                                         <Check class="w-6 h-6 text-white" />
                                     </div>
-                                </div>
-
-                                <div
-                                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                                    <p class="text-white text-sm font-semibold text-center truncate">{{ avatar.name }}
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -80,6 +75,7 @@ import { X, Check } from 'lucide-vue-next';
 import { getActiveAvatar } from '../../api/avatarApi';
 import { updateUserAvatar, removeUserAvatar } from '../../api/userProfileApi';
 import Swal from 'sweetalert2';
+import LoadingSkeleton from '../ui/LoadingSkeleton.vue';
 
 const props = defineProps({
     isOpen: {
