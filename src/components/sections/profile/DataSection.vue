@@ -3,23 +3,33 @@
         <div class="w-full max-w-[1500px]">
             <span class="text-gray-600 text-sm font-bold">PROFILE</span>
 
-            <div class="flex flex-col md:flex-row items-center gap-5 mt-5">
-                <img src="https://placehold.co/250x250" alt="Profile Picture" class="w-[250px] h-[250px] rounded-xl" />
+            <div v-if="isLoading" class="flex justify-center items-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            </div>
+
+            <div v-else class="flex flex-col md:flex-row items-center gap-5 mt-5">
+                <div class="relative group">
+                    <img :src="profileData.avatars?.image_url || 'https://placehold.co/250x250'" alt="Profile Picture"
+                        class="w-[250px] h-[250px] rounded-xl object-cover cursor-pointer transition-all duration-200 group-hover:brightness-75"
+                        @click="openAvatarModal" />
+
+                    <div @click="openAvatarModal"
+                        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer rounded-xl">
+                        <div class="bg-black/50 p-3 rounded-full">
+                            <Pencil class="w-6 h-6 text-white" />
+                        </div>
+                    </div>
+                </div>
 
                 <div class="text-center md:text-left">
-                    <span class="font-bold text-blue-600 text-lg">#5</span>
+
+                    <p class="font-bold text-blue-600"># {{ profileData.rank || 'Unranked' }}</p>
+
                     <div class="flex items-center justify-center md:justify-start gap-2">
-                        <h1 class="font-bold text-3xl mt-2">Sarah Johnson</h1>
-                        <button class="cursor-pointer hover:text-blue-600 transition-colors">
-                            <Pencil class="w-5 h-5" />
-                        </button>
+                        <h1 class="font-bold text-3xl mt-2">{{ profileData.username || 'User' }}</h1>
                     </div>
 
-                    <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-3 text-gray-600">
-                        <span>sarah@gmail.com</span>
-                        <div class="bg-gray-500 p-0.5 rounded-full"></div>
-                        <span>12 August 2012</span>
-                    </div>
+                    <p class="mt-3 text-gray-600">{{ formatDate(profileData.created_at) }}</p>
 
                     <div class="flex flex-wrap items-center justify-center md:justify-start gap-3 mt-5">
                         <div v-for="(stat, index) in stats" :key="index"
@@ -36,33 +46,96 @@
                 </div>
             </div>
         </div>
+
+        <AvatarSelectorModal :isOpen="isAvatarModalOpen" :currentAvatarId="profileData.avatars?.id"
+            @close="closeAvatarModal" @updated="handleAvatarUpdated" />
     </div>
 </template>
 
 <script setup>
-import { Coins, CircleQuestionMark, LaptopMinimalCheck, Pencil } from 'lucide-vue-next'
+import { ref, computed, onMounted } from 'vue';
+import { Coins, CircleQuestionMark, LaptopMinimalCheck, Pencil } from 'lucide-vue-next';
+import AvatarSelectorModal from '../../../components/modal/AvatarSelectorModal.vue';
+import { getMyProfile } from '../../../api/userProfileApi';
 
-const stats = [
+const profileData = ref({});
+const isLoading = ref(false);
+const isAvatarModalOpen = ref(false);
+
+// const getRankDisplay = computed(() => {
+//     if (!profileData.value.rank) return 'Unranked';
+//     return `#${profileData.value.rank} Rank`;
+// });
+
+// const getRankEmoji = computed(() => {
+//     const rank = profileData.value.rank;
+//     if (rank === 1) return '🥇';
+//     if (rank === 2) return '🥈';
+//     if (rank === 3) return '🥉';
+//     return '';
+// });
+
+const stats = computed(() => [
     {
         title: "TOTAL POINTS EARNED",
-        value: "290",
+        value: profileData.value.total_points || "0",
         color: "text-green-500",
         gradient: "from-green-700 to-green-500",
         icon: Coins,
     },
     {
         title: "QUIZZES COMPLETED",
-        value: "280",
+        value: profileData.value.total_quiz_completed || "0",
         color: "text-purple-500",
         gradient: "from-purple-700 to-purple-500",
         icon: CircleQuestionMark,
     },
     {
         title: "SUCCESSFUL ATTEMPTS",
-        value: "45",
+        value: profileData.value.total_perfect_attempts || "0",
         color: "text-pink-500",
         gradient: "from-pink-700 to-pink-500",
         icon: LaptopMinimalCheck,
     },
-]
+]);
+
+const fetchProfile = async () => {
+    try {
+        isLoading.value = true;
+        const response = await getMyProfile();
+
+        if (response.success && response.data) {
+            profileData.value = response.data;
+            console.log('Profile with rank:', profileData.value); // Debug
+        }
+    } catch (error) {
+        console.error('Error fetching profile:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const formatDate = (dateString) => {
+    if (!dateString) return 'No date';
+
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+};
+
+const openAvatarModal = () => {
+    isAvatarModalOpen.value = true;
+};
+
+const closeAvatarModal = () => {
+    isAvatarModalOpen.value = false;
+};
+
+const handleAvatarUpdated = async () => {
+    await fetchProfile();
+};
+
+onMounted(() => {
+    fetchProfile();
+});
 </script>
