@@ -18,14 +18,23 @@
                         </div>
 
                         <div class="px-2 py-6 space-y-5">
-                            <component v-for="field in fields" :key="field.name" :is="getComponentType(field.type)"
-                                v-model="formData[field.name]" :label="field.label" :placeholder="field.placeholder"
-                                :required="field.required" :error="errors[field.name]" :hint="field.hint"
-                                :rows="field.rows" :maxLength="field.maxLength" :type="field.inputType"
-                                :icon="field.icon" :toolbar="field.toolbar" :disabled="field.disabled"
-                                :readonly="field.readonly" :options="field.options" :optionLabel="field.optionLabel"
-                                :optionValue="field.optionValue" :searchable="field.searchable"
-                                :emptyText="field.emptyText" />
+                            <template v-for="field in fields" :key="field.name">
+                                <component :is="getComponentType(field.type)" v-model="formData[field.name]"
+                                    :label="field.label" :placeholder="field.placeholder" :required="field.required"
+                                    :error="errors[field.name]" :hint="field.hint" :rows="field.rows"
+                                    :maxLength="field.maxLength" :type="field.inputType" :icon="field.icon"
+                                    :toolbar="field.toolbar" :disabled="field.disabled" :readonly="field.readonly"
+                                    :options="field.options" :optionLabel="field.optionLabel"
+                                    :optionValue="field.optionValue" :searchable="field.searchable"
+                                    :emptyText="field.emptyText" />
+
+                                <div v-if="field.type === 'image' && mode === 'edit' && existingImageUrl && !formData[field.name]"
+                                    class="mt-3 space-y-2">
+                                    <p class="text-sm font-medium text-gray-700">Current Image:</p>
+                                    <img :src="existingImageUrl" alt="Current image"
+                                        class="w-full h-48 rounded-lg object-cover border-2 border-gray-200 shadow-sm" />
+                                </div>
+                            </template>
                         </div>
 
                         <div
@@ -81,6 +90,10 @@ const props = defineProps({
     initialData: {
         type: Object,
         default: () => ({})
+    },
+    existingImageUrl: {
+        type: String,
+        default: ''
     }
 });
 
@@ -137,6 +150,11 @@ const validateForm = () => {
     props.fields.forEach(field => {
         if (field.required) {
             const value = formData.value[field.name];
+
+            if (field.type === 'image' && props.mode === 'edit' && props.existingImageUrl) {
+                return;
+            }
+
             if (!value || (typeof value === 'string' && !value.trim())) {
                 errors.value[field.name] = `${field.label} is required`;
                 isValid = false;

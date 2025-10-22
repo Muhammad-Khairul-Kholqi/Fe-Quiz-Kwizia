@@ -49,6 +49,10 @@ const props = defineProps({
     required: {
         type: Boolean,
         default: false
+    },
+    previewUrl: {
+        type: String,
+        default: null
     }
 });
 
@@ -58,6 +62,12 @@ const fileInput = ref(null);
 const imageUrl = ref(null);
 const isDragging = ref(false);
 const error = ref('');
+
+watch(() => props.previewUrl, (newUrl) => {
+    if (newUrl && !imageUrl.value) {
+        imageUrl.value = newUrl;
+    }
+}, { immediate: true });
 
 watch(() => props.modelValue, (newValue) => {
     if (newValue) {
@@ -70,7 +80,7 @@ watch(() => props.modelValue, (newValue) => {
             };
             reader.readAsDataURL(newValue);
         }
-    } else {
+    } else if (!props.previewUrl) {
         imageUrl.value = null;
     }
 }, { immediate: true });
@@ -83,12 +93,12 @@ const validateFile = (file) => {
     error.value = '';
 
     if (!file.type.startsWith('image/')) {
-        error.value = 'File harus berupa gambar';
+        error.value = 'File must be an image';
         return false;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-        error.value = 'Ukuran file maksimal 10MB';
+    if (file.size > 1 * 1024 * 1024) {
+        error.value = 'File size cannot exceed 1 MB';
         return false;
     }
 
@@ -104,6 +114,8 @@ const handleFileChange = (event) => {
             emit('update:modelValue', file);
         };
         reader.readAsDataURL(file);
+    } else if (!validateFile(file)) {
+        event.target.value = '';
     }
 };
 
@@ -121,7 +133,7 @@ const handleDrop = (event) => {
 };
 
 const removeImage = () => {
-    imageUrl.value = null;
+    imageUrl.value = props.previewUrl || null;
     error.value = '';
     if (fileInput.value) {
         fileInput.value.value = '';

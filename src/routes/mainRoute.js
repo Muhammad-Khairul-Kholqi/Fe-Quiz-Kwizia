@@ -26,6 +26,7 @@ import Dashboard from "../views/private/admin/Dashboard.vue";
 import FAQData from "../views/private/admin/FAQData.vue";
 import CategoryBlog from "../views/private/admin/CategoryBlog.vue";
 import CategoryQuiz from "../views/private/admin/CategoryQuiz.vue";
+import Avatar from "../views/private/admin/Avatar.vue";
 
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
@@ -151,6 +152,15 @@ const routes = [
                 component: CategoryQuiz,
                 meta: {
                     title: "Category Quiz",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "avatar",
+                component: Avatar,
+                meta: {
+                    title: "Avatar",
                     requiresAuth: true,
                     role: 'admin'
                 }
