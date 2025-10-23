@@ -175,7 +175,7 @@ const menuItems = [
         name: "Blog",
         icon: Newspaper,
         children: [
-            { name: "Articles", to: "/private/admin/articles" },
+            { name: "Articles", to: "/private/admin/blog" },
             { name: "Category", to: "/private/admin/category-blog" },
         ],
     },

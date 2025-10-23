@@ -25,6 +25,7 @@ import Profile from "../views/private/user/Profile.vue";
 import Dashboard from "../views/private/admin/Dashboard.vue";
 import FAQData from "../views/private/admin/FAQData.vue";
 import CategoryBlog from "../views/private/admin/CategoryBlog.vue";
+import BlogData from "../views/private/admin/BlogData.vue";
 import CategoryQuiz from "../views/private/admin/CategoryQuiz.vue";
 import Avatar from "../views/private/admin/Avatar.vue";
 
@@ -143,6 +144,15 @@ const routes = [
                 component: CategoryBlog,
                 meta: {
                     title: "Category Blog",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "blog",
+                component: BlogData,
+                meta: {
+                    title: "Blog",
                     requiresAuth: true,
                     role: 'admin'
                 }
