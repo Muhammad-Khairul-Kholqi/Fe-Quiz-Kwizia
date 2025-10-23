@@ -31,8 +31,7 @@
                 </div>
 
                 <div class="text-center md:text-left">
-
-                    <p class="font-bold text-blue-600"># {{ profileData.rank || 'Unranked' }}</p>
+                    <p class="font-bold text-blue-600"># {{ formattedRank }}</p>
 
                     <div class="flex items-center justify-center md:justify-start gap-1">
                         <h1 class="font-bold text-3xl mt-2">{{ profileData.username || 'User' }}</h1>
@@ -71,7 +70,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { Coins, CircleQuestionMark, LaptopMinimalCheck, Pencil } from 'lucide-vue-next';
 import AvatarSelectorModal from '../../../components/modal/AvatarSelectorModal.vue';
-import { getMyProfile } from '../../../api/userProfileApi';
+import { getMyProfile, updateUserProfile } from '../../../api/userProfileApi';
 import loadingSkeleton from '../../../components/ui/LoadingSkeleton.vue';
 import AddEditModal from '../../../components/modal/AddEditModal.vue';
 
@@ -107,6 +106,31 @@ const stats = computed(() => [
     },
 ]);
 
+const formattedRank = computed(() => {
+    const rank = profileData.value.rank;
+
+    if (!rank) return 'Unranked';
+
+    const rankNum = parseInt(rank);
+
+    if (rankNum % 100 >= 11 && rankNum % 100 <= 13) {
+        return `${rankNum}th`;
+    }
+
+    const lastDigit = rankNum % 10;
+
+    switch (lastDigit) {
+        case 1:
+            return `${rankNum}st`;
+        case 2:
+            return `${rankNum}nd`;
+        case 3:
+            return `${rankNum}rd`;
+        default:
+            return `${rankNum}th`;
+    }
+});
+
 const modalTitle = computed(() => {
     return 'Profile';
 });
@@ -128,7 +152,7 @@ const fetchProfile = async () => {
 
         if (response.success && response.data) {
             profileData.value = response.data;
-            console.log('Profile with rank:', profileData.value); 
+            console.log('Profile with rank:', profileData.value);
         }
     } catch (error) {
         console.error('Error fetching profile:', error);
@@ -153,7 +177,6 @@ const closeAvatarModal = () => {
     isAvatarModalOpen.value = false;
 };
 
-
 const handleAvatarUpdated = async () => {
     await fetchProfile();
 };
@@ -167,28 +190,23 @@ const openEditModal = () => {
     };
 };
 
-
 const closeModal = () => {
     isModalOpen.value = false;
     selectedItem.value = {};
 };
 
-const handleSubmit = ({ mode, data }) => {
-    if (mode === 'add') {
-        const newItem = {
-            id: users.value.length + 1,
-            ...data
-        };
-        users.value.push(newItem);
-        console.log('Added:', newItem);
-    } else {
-        const index = users.value.findIndex(u => u.id === selectedItem.value.id);
-        if (index !== -1) {
-            users.value[index] = {
-                ...users.value[index],
-                ...data
-            };
-            console.log('Updated:', users.value[index]);
+const handleSubmit = async ({ mode, data }) => {
+    if (mode === 'edit') {
+        try {
+            const response = await updateUserProfile({
+                username: data.username
+            });
+
+            if (response.success) {
+                profileData.value = response.data;
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
         }
     }
 

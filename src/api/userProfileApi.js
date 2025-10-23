@@ -60,6 +60,29 @@ export const getMyProfile = async () => {
     }
 }
 
+export const updateUserProfile = async (profileData) => {
+    try {
+        const response = await apiClient.put('/profile/me', profileData)
+        console.log('Update Profile response:', response.data)
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Profile updated successfully',
+            timer: 2000,
+            showConfirmButton: false
+        })
+        return response.data
+    } catch (error) {
+        console.error('Error updating Profile:', error)
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.response ?.data ?.message || 'Failed to update Profile'
+        })
+        throw error
+    }
+}
+
 export const updateUserAvatar = async (avatarId) => {
     try {
         const response = await apiClient.put('/profile/avatar', {

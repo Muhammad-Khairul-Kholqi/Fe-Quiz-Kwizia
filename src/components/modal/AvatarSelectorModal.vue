@@ -14,17 +14,16 @@
                     </div>
 
                     <div v-if="isLoading" class="grid grid-cols-3 items-center gap-2">
-                        <LoadingSkeleton height="150px" />
-                        <LoadingSkeleton height="150px" />
-                        <LoadingSkeleton height="150px" />
-                        <LoadingSkeleton height="150px" />
-                        <LoadingSkeleton height="150px" />
-                        <LoadingSkeleton height="150px" />
+                        <LoadingSkeleton height="100px" />
+                        <LoadingSkeleton height="100px" />
+                        <LoadingSkeleton height="100px" />
+                        <LoadingSkeleton height="100px" />
+                        <LoadingSkeleton height="100px" />
+                        <LoadingSkeleton height="100px" />
                     </div>
 
                     <div v-else-if="avatars.length === 0" class="text-center py-20 text-gray-500">
                         <p class="text-lg">No avatars available</p>
-                        <p class="text-sm mt-2">Please contact admin to add avatars</p>
                     </div>
 
                     <div v-else class="max-h-[60vh] overflow-y-auto">
@@ -47,7 +46,7 @@
                     <div class="flex items-center justify-between gap-3 mt-5 pt-5 border-t border-gray-200">
                         <button v-if="currentAvatarId" @click="handleRemoveAvatar"
                             class="px-5 py-2.5 border border-red-500 text-red-500 rounded-lg hover:bg-red-50 transition-colors cursor-pointer">
-                            Remove Avatar
+                            Remove
                         </button>
                         <div v-else></div>
 
@@ -58,7 +57,7 @@
                             </button>
                             <button @click="handleSubmit" :disabled="!selectedAvatarId || isSubmitting"
                                 class="px-5 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                                <span v-if="!isSubmitting">Save Avatar</span>
+                                <span v-if="!isSubmitting">Save</span>
                                 <span v-else>Saving...</span>
                             </button>
                         </div>
