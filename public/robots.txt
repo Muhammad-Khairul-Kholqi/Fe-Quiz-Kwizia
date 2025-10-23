@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /app/
+Disallow: /private/
+Sitemap: https://kwizia.vercel.app/sitemap.xml

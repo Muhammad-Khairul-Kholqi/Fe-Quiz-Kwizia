@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://kwizia.vercel.app/</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/blog</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/leaderboard</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/faq</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/contact-us</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/signin</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://kwizia.vercel.app/signup</loc>
+    <lastmod>2025-10-23</lastmod>
+    <priority>0.3</priority>
+  </url>
+</urlset>
