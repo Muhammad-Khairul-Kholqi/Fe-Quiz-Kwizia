@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 // landing before login
 import Home from "../views/public/landing/Home.vue";
 import Blog from "../views/public/landing/Blog.vue";
-import DetaiBlog from "../views/public/landing/DetaiBlog.vue";
+import DetailBlog from "../views/public/landing/DetaiBlog.vue";
 import Leaderboard from "../views/public/landing/Leaderboard.vue";
 import Faq from "../views/public/landing/Faq.vue";
 import Contact from "../views/public/landing/Contact.vue";
@@ -53,8 +53,8 @@ const routes = [
                 }
             },
             {
-                path: "detail-blog",
-                component: DetaiBlog,
+                path: "detail-blog/:id/:slug",
+                component: DetailBlog,
                 meta: {
                     title: "Detail Blog",
                 }
@@ -120,8 +120,7 @@ const routes = [
             requiresAuth: true,
             role: 'admin'
         },
-        children: [
-            {
+        children: [{
                 path: "dashboard",
                 component: Dashboard,
                 meta: {

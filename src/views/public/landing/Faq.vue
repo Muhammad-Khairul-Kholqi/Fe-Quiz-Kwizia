@@ -61,7 +61,6 @@
                     </div>
                 </div>
 
-                <!-- No Results -->
                 <div v-else class="text-center py-10">
                     <p class="text-gray-500 text-lg">No FAQs found matching your search.</p>
                 </div>
