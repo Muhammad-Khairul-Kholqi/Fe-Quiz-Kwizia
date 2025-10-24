@@ -41,8 +41,12 @@
                         <div class="flex items-center gap-5">
                             <span class="text-gray-600 w-12">{{ user.rank }}</span>
                             <div class="flex items-center gap-2">
-                                <img :src="user.avatars?.image_url || 'https://placehold.co/40x40'" :alt="user.username"
+                                <img v-if="user.avatars?.image_url" :src="user.avatars.image_url" :alt="user.username"
                                     class="w-10 h-10 rounded-full object-cover">
+                                <div v-else
+                                    :class="['w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm', getRankColor(user.rank)]">
+                                    {{ user.rank }}
+                                </div>
                                 <span class="text-gray-600 w-40">{{ user.username }}</span>
                             </div>
                         </div>
@@ -77,4 +81,17 @@ defineProps({
         default: () => []
     }
 });
+
+const getRankColor = (rank) => {
+    const colors = {
+        4: 'bg-blue-500',
+        5: 'bg-indigo-500',
+        6: 'bg-purple-500',
+        7: 'bg-pink-500',
+        8: 'bg-rose-500',
+        9: 'bg-teal-500',
+        10: 'bg-cyan-500'
+    };
+    return colors[rank] || 'bg-gray-500';
+};
 </script>

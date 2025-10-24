@@ -9,7 +9,7 @@
                     <div :class="['relative bg-gradient-to-tr from-gray-200 to-gray-100 rounded-xl overflow-visible',
                         i === 2 ? 'h-[130px]' : 'h-[110px]']">
                         <LoadingSkeleton type="circle" :size="i === 2 ? '100px' : '80px'"
-                            class="absolute -bottom-3 left-5 translate-y-1/2" />
+                            class="absolute -bottom-5 left-5 translate-y-1/2" />
                     </div>
                     <div :class="['p-4', i === 2 ? 'mt-8' : 'mt-6']">
                         <LoadingSkeleton type="text" width="70%" height="24px" class="mb-4" />
@@ -36,7 +36,7 @@
                     class="w-full max-w-[280px] border-3 border-white bg-white rounded-xl order-2 md:order-1 shadow-lg"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 400)">
                     <div
-                        class="relative bg-gradient-to-tr from-[#F4F2FF] via-[#ECFBFF] to-[#FFF2EC] h-[110px] rounded-xl overflow-visible">
+                        class="relative bg-gradient-to-tr from-[#DAD6FA] via-[#D2EEF5] to-[#F5D9CC] h-[110px] rounded-xl overflow-visible">
                         <div class="absolute top-2 right-3 text-right leading-none">
                             <p class="text-5xl font-bold text-white">
                                 2<span class="text-xl align-top">nd</span>
@@ -71,7 +71,7 @@
                     class="w-full max-w-[320px] border-3 border-white bg-white rounded-xl order-1 md:order-2 shadow-lg"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200)">
                     <div
-                        class="relative bg-gradient-to-tr from-[#F3E7FF] via-[#FEE4F3] to-[#FEEFD0] h-[130px] rounded-xl overflow-visible">
+                        class="relative bg-gradient-to-tr from-[#D9C9F0] via-[#F6C9DE] to-[#F4D7B3] h-[130px] rounded-xl overflow-visible">
                         <div class="absolute top-2 right-3 text-right leading-none">
                             <p class="text-7xl font-bold text-white">
                                 1<span class="text-3xl align-top">st</span>
@@ -105,8 +105,7 @@
                 <div v-if="topThree[2]"
                     class="w-full max-w-[280px] border-3 border-white bg-white rounded-xl order-3 shadow-lg"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 600)">
-                    <div
-                        class="relative bg-gradient-to-tr from-[#E6F5FA] via-[#FFF0F0] to-[#E9F9E8] h-[110px] rounded-xl overflow-visible">
+                    <div class="relative bg-gradient-to-tr from-[#C8E3ED] via-[#F6DCDC] to-[#CAE7C8] h-[110px] rounded-xl overflow-visible">
                         <div class="absolute top-2 right-3 text-right leading-none">
                             <p class="text-5xl font-bold text-white">
                                 3<span class="text-xl align-top">rd</span>
