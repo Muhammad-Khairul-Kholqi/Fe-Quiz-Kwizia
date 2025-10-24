@@ -23,6 +23,7 @@ import Profile from "../views/private/user/Profile.vue";
 
 // admin
 import Dashboard from "../views/private/admin/Dashboard.vue";
+import User from "../views/private/admin/User.vue";
 import FAQData from "../views/private/admin/FAQData.vue";
 import CategoryBlog from "../views/private/admin/CategoryBlog.vue";
 import BlogData from "../views/private/admin/BlogData.vue";
@@ -125,6 +126,15 @@ const routes = [
                 component: Dashboard,
                 meta: {
                     title: "Dashboard",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "users",
+                component: User,
+                meta: {
+                    title: "User",
                     requiresAuth: true,
                     role: 'admin'
                 }
