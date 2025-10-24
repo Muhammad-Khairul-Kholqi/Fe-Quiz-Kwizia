@@ -15,22 +15,48 @@
                     </div>
                 </div>
 
-                <div v-for="(user, index) in leaderboardData" :key="index" v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 200 + index * 200)"
-                    class=" flex justify-between items-center p-3 border-b border-gray-200 min-w-[700px]
-                    hover:bg-gray-50 transition-colors">
-                    <div class="flex items-center gap-5">
-                        <span class="text-gray-600 w-12">{{ user.rank }}</span>
-                        <div class="flex items-center gap-2">
-                            <img :src="user.avatar" :alt="user.name" class="w-10 h-10 rounded-full">
-                            <span class="text-gray-600 w-40">{{ user.name }}</span>
+                <div v-if="loading" class="space-y-2">
+                    <div v-for="i in 7" :key="i"
+                        class="flex justify-between items-center p-3 border-b border-gray-200 min-w-[700px]">
+                        <div class="flex items-center gap-5">
+                            <LoadingSkeleton type="text" width="40px" height="16px" />
+                            <div class="flex items-center gap-2">
+                                <LoadingSkeleton type="circle" size="40px" />
+                                <LoadingSkeleton type="text" width="150px" height="16px" />
+                            </div>
+                        </div>
+
+                        <div class="flex items-center divide-x divide-gray-200 text-center gap-4">
+                            <LoadingSkeleton type="text" width="60px" height="16px" />
+                            <LoadingSkeleton type="text" width="60px" height="16px" />
+                            <LoadingSkeleton type="text" width="60px" height="16px" />
                         </div>
                     </div>
+                </div>
 
-                    <div class="flex items-center divide-x divide-gray-200 text-center">
-                        <span class="w-24 text-gray-700">{{ user.points }}</span>
-                        <span class="w-24 text-gray-700">{{ user.quizzes }}</span>
-                        <span class="w-24 text-gray-700">{{ user.success }}</span>
+                <div v-else-if="otherUsers.length > 0">
+                    <div v-for="(user, index) in otherUsers" :key="user.id"
+                        v-motion="motionAnimation.createDelayedAnimation(motionAnimation.slideLeft, 200 + index * 200)"
+                        class="flex justify-between items-center p-3 border-b border-gray-200 min-w-[700px] hover:bg-gray-50 transition-colors">
+                        <div class="flex items-center gap-5">
+                            <span class="text-gray-600 w-12">{{ user.rank }}</span>
+                            <div class="flex items-center gap-2">
+                                <img :src="user.avatars?.image_url || 'https://placehold.co/40x40'" :alt="user.username"
+                                    class="w-10 h-10 rounded-full object-cover">
+                                <span class="text-gray-600 w-40">{{ user.username }}</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center divide-x divide-gray-200 text-center">
+                            <span class="w-24 text-gray-700">{{ user.total_points }}</span>
+                            <span class="w-24 text-gray-700">{{ user.total_quiz_completed }}</span>
+                            <span class="w-24 text-gray-700">{{ user.total_perfect_attempts }}</span>
+                        </div>
                     </div>
+                </div>
+
+                <div v-else class="text-center py-10">
+                    <p class="text-gray-500">No other users in the leaderboard yet.</p>
                 </div>
             </div>
         </div>
@@ -38,15 +64,17 @@
 </template>
 
 <script setup>
-import * as motionAnimation from "../../animation/motionAnimation"
+import * as motionAnimation from "../../animation/motionAnimation";
+import LoadingSkeleton from '../../ui/LoadingSkeleton.vue';
 
-const leaderboardData = [
-    { rank: 4, name: 'Khairul Kholqi', avatar: 'https://placehold.co/40x40', points: 300, quizzes: 200, success: 100 },
-    { rank: 5, name: 'Sarah Johnson', avatar: 'https://placehold.co/40x40', points: 290, quizzes: 195, success: 98 },
-    { rank: 6, name: 'Michael Chen', avatar: 'https://placehold.co/40x40', points: 285, quizzes: 190, success: 95 },
-    { rank: 7, name: 'Emily Davis', avatar: 'https://placehold.co/40x40', points: 280, quizzes: 185, success: 92 },
-    { rank: 8, name: 'James Wilson', avatar: 'https://placehold.co/40x40', points: 275, quizzes: 180, success: 90 },
-    { rank: 9, name: 'Olivia Brown', avatar: 'https://placehold.co/40x40', points: 270, quizzes: 175, success: 88 },
-    { rank: 10, name: 'Daniel Martinez', avatar: 'https://placehold.co/40x40', points: 265, quizzes: 170, success: 85 },
-]
+defineProps({
+    loading: {
+        type: Boolean,
+        required: true
+    },
+    otherUsers: {
+        type: Array,
+        default: () => []
+    }
+});
 </script>
