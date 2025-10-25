@@ -20,6 +20,7 @@ import Signup from "../views/public/auth/Signup.vue";
 // landing after login
 import Quiz from "../views/private/user/Quiz.vue";
 import Profile from "../views/private/user/Profile.vue";
+import QuizQuestion from "../views/private/user/QuizQuestion.vue";
 
 // admin
 import Dashboard from "../views/private/admin/Dashboard.vue";
@@ -34,6 +35,7 @@ import ContactEmail from "../views/private/admin/ContactEmail.vue";
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
 import AdminLayout from "../layouts/AdminLayout.vue";
+
 
 const routes = [
     // landing before login (public routes)
@@ -111,8 +113,27 @@ const routes = [
                     role: 'user'
                 }
             },
+            {
+                path: "quiz-question",
+                component: QuizQuestion,
+                meta: {
+                    title: "Quiz Page",
+                    requiresAuth: true,
+                    role: 'user'
+                }
+            },
         ]
     },
+
+    // {
+    //     path: "/app/quiz-question",
+    //     component: QuizQuestion,
+    //     meta: {
+    //         title: "Quiz Page",
+    //         requiresAuth: true,
+    //         role: 'user'
+    //     }
+    // },
 
     // admin routes (requires auth and admin role)
     {

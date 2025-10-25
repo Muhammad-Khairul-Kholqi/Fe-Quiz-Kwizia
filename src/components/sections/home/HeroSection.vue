@@ -88,6 +88,6 @@ onMounted(() => {
 const staticsData = [
     { number: '100K+', label: 'USERS WORLDWIDE' },
     { number: '200', label: 'FUN QUIZZES' },
-    { number: '150', label: 'CATEGORIES QUIZZES' },
+    { number: '150', label: 'INSIGHTFUL BLOGS' },
 ]
 </script>
