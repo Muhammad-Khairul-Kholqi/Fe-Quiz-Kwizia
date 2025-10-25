@@ -5,12 +5,26 @@
                 <Search class="w-5 h-5 text-gray-500 flex-shrink-0" />
                 <input type="text" v-model="searchQuery" class="w-full px-2 outline-none" placeholder="Search User...">
             </div>
-            <select v-model="roleFilter"
-                class="w-full sm:w-auto sm:min-w-[140px] p-2 border border-gray-200 rounded-lg outline-none cursor-pointer">
-                <option value="">All Roles</option>
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-            </select>
+
+            <div class="relative w-full sm:w-auto sm:min-w-[140px]" ref="dropdownRef">
+                <button @click="toggleDropdown"
+                    class="w-full p-2 border border-gray-200 rounded-lg flex items-center justify-between gap-2 bg-white hover:border-gray-300 transition-colors cursor-pointer">
+                    <span class="text-gray-700">{{ selectedRoleLabel }}</span>
+                    <svg class="w-4 h-4 text-gray-500 transition-transform" :class="{ 'rotate-180': isDropdownOpen }"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <div v-if="isDropdownOpen"
+                    class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden">
+                    <button v-for="option in roleOptions" :key="option.value" @click="selectRole(option.value)"
+                        class="w-full px-4 py-2.5 text-left hover:bg-gray-50 transition-colors cursor-pointer"
+                        :class="{ 'bg-blue-50 text-blue-700 font-medium': roleFilter === option.value }">
+                        <span>{{ option.label }}</span>
+                    </button>
+                </div>
+            </div>
         </div>
 
         <Table :columns="columns" :data="paginatedUsers" :isLoading="isLoading" class="mt-5">
@@ -34,16 +48,12 @@
             <template #cell-stats="{ row }">
                 <div class="space-y-1">
                     <p class="text-sm text-gray-600">Points: <span class="font-semibold text-gray-900">{{
-                            row.total_points || 0 }}</span></p>
+                        row.total_points || 0 }}</span></p>
                     <p class="text-sm text-gray-600">Quizzes: <span class="font-semibold text-gray-900">{{
-                            row.total_quiz_completed || 0 }}</span></p>
+                        row.total_quiz_completed || 0 }}</span></p>
                     <p class="text-sm text-gray-600">Perfect: <span class="font-semibold text-gray-900">{{
-                            row.total_perfect_attempts || 0 }}</span></p>
+                        row.total_perfect_attempts || 0 }}</span></p>
                 </div>
-            </template>
-
-            <template #cell-created_at="{ row }">
-                <p class="text-sm text-gray-600">{{ formatDate(row.created_at) }}</p>
             </template>
 
             <template #cell-actions="{ row }">
@@ -78,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Table from '../../../components/ui/Table.vue';
 import Pagination from '../../../components/ui/Pagination.vue';
@@ -108,9 +118,46 @@ const modalMode = ref('edit');
 const selectedItem = ref({});
 const selectedDetailItem = ref({});
 const isLoading = ref(false);
+const isDropdownOpen = ref(false);
+const dropdownRef = ref(null);
 
 const currentPage = ref(1);
 const perPage = ref(10);
+
+const roleOptions = [
+    { label: 'All Roles', value: '' },
+    { label: 'User', value: 'user' },
+    { label: 'Admin', value: 'admin' }
+];
+
+const selectedRoleLabel = computed(() => {
+    const selected = roleOptions.find(opt => opt.value === roleFilter.value);
+    return selected ? selected.label : 'All Roles';
+});
+
+const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value;
+};
+
+const selectRole = (value) => {
+    roleFilter.value = value;
+    isDropdownOpen.value = false;
+};
+
+const handleClickOutside = (event) => {
+    if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+        isDropdownOpen.value = false;
+    }
+};
+
+onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+    fetchUsers();
+});
+
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside);
+});
 
 const modalTitle = computed(() => {
     return 'User Role';
@@ -184,12 +231,6 @@ const detailFields = computed(() => {
             value: selectedDetailItem.value.total_perfect_attempts || 0,
             type: 'text'
         },
-        {
-            key: 'avatar_id',
-            label: 'Avatar ID',
-            value: selectedDetailItem.value.avatar_id || 'No Avatar',
-            type: 'text'
-        },
     ];
 });
 
@@ -236,18 +277,6 @@ watch(() => route.query.page, (newPage) => {
     const page = parseInt(newPage) || 1;
     currentPage.value = page;
 }, { immediate: true });
-
-const formatDate = (dateString) => {
-    if (!dateString) return '-';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-};
 
 const fetchUsers = async () => {
     try {
@@ -330,8 +359,4 @@ const deleteUserItem = async (row) => {
         }
     }
 };
-
-onMounted(() => {
-    fetchUsers();
-});
 </script>

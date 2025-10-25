@@ -29,6 +29,7 @@ import CategoryBlog from "../views/private/admin/CategoryBlog.vue";
 import BlogData from "../views/private/admin/BlogData.vue";
 import CategoryQuiz from "../views/private/admin/CategoryQuiz.vue";
 import Avatar from "../views/private/admin/Avatar.vue";
+import ContactEmail from "../views/private/admin/ContactEmail.vue";
 
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
@@ -134,7 +135,7 @@ const routes = [
                 path: "users",
                 component: User,
                 meta: {
-                    title: "User",
+                    title: "Users",
                     requiresAuth: true,
                     role: 'admin'
                 }
@@ -180,6 +181,15 @@ const routes = [
                 component: Avatar,
                 meta: {
                     title: "Avatar",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "contact",
+                component: ContactEmail,
+                meta: {
+                    title: "Contact",
                     requiresAuth: true,
                     role: 'admin'
                 }
