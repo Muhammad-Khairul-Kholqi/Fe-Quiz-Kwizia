@@ -115,14 +115,14 @@ const routes = [
                 }
             },
             {
-                path: "quiz-question",
+                path: "quiz-question/:id",
                 component: QuizQuestion,
                 meta: {
                     title: "Quiz Page",
                     requiresAuth: true,
                     role: 'user'
                 }
-            },
+            }
         ]
     },
 

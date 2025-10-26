@@ -1,111 +1,150 @@
 <template>
     <div class="flex justify-center p-5">
         <div class="w-full max-w-[1500px]">
-            <div class="bg-[#F8F9FD] p-5 rounded-xl flex flex-col md:flex-row items-center gap-5">
-                <img src="https://placehold.co/300x300" alt="Quiz Thumbnail"
-                    class="w-full max-w-[300px] h-full max-h-[300px] object-cover rounded-xl" />
-
-                <div class="space-y-5 text-center md:text-left w-full">
-                    <div class="flex justify-center md:justify-start">
-                        <div class="px-4 py-2 bg-blue-50 text-blue-500 rounded-lg">
-                            <span>English</span>
-                        </div>
+            <div v-if="isLoading" class="bg-[#F8F9FD] p-5 rounded-xl">
+                <div class="flex flex-col md:flex-row items-center gap-5">
+                    <div class="w-full max-w-[300px] h-[300px] bg-gray-200 rounded-xl animate-pulse"></div>
+                    <div class="flex-1 space-y-4 w-full">
+                        <div class="h-10 bg-gray-200 rounded animate-pulse w-32"></div>
+                        <div class="h-12 bg-gray-200 rounded animate-pulse w-3/4"></div>
+                        <div class="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
+                        <div class="h-12 bg-gray-200 rounded animate-pulse w-48"></div>
                     </div>
-
-                    <h1 class="text-3xl font-bold">Learn English</h1>
-
-                    <div class="flex items-center gap-5 justify-center md:justify-start">
-                        <div class="flex items-center gap-2">
-                            <MessageCircleQuestion class="w-4 h-4" />
-                            <span>
-                                10
-                                <span class="hidden sm:inline">questions</span>
-                            </span>
-                        </div>
-
-                        <div class="flex items-center gap-2">
-                            <Play class="w-4 h-4" />
-                            <span>200</span>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center gap-3 justify-center md:justify-start">
-                        <div class="flex">
-                            <button @click="$emit('start')"
-                                class="text-center w-[200px] bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer px-5 py-2 rounded-full text-white">
-                                Play Now
-                            </button>
-                        </div>
-
-                        <div class="flex relative" ref="shareMenuRef">
-                            <button @click="toggleShare"
-                                class="border border-gray-200 flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 cursor-pointer">
-                                <Share2 class="w-4 h-4 text-gray-700" />
-                            </button>
-
-                            <div v-if="showShareMenu"
-                                class="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 w-50 z-10">
-                                <button v-for="(option, index) in shareOptions" :key="index" @click="option.action"
-                                    class="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-sm cursor-pointer">
-                                    <component :is="option.icon" />
-                                    {{ option.name }}
-                                </button>
-                                <hr class="my-2 border-0.5 border-gray-200" />
-                                <button @click="copyLink"
-                                    class="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-sm cursor-pointer">
-                                    <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                    </svg>
-                                    {{ copied ? 'Copied!' : 'Copy Link' }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p class="text-gray-700">Test your knowledge on learning English with this engaging quiz.</p>
                 </div>
             </div>
 
-            <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 md:p-8">
-                    <h3 class="font-semibold text-blue-700 mb-3 text-xl">
-                        Quiz Information
-                    </h3>
-                    <ul class="space-y-2 text-gray-700 text-sm md:text-base">
-                        <li><strong>Number of Questions:</strong> 10 questions</li>
-                        <li><strong>Time:</strong> 10 minutes</li>
-                        <li><strong>Type:</strong> Multiple Choice (A–D)</li>
-                        <li><strong>Points Per Question:</strong> 10 Points</li>
-                    </ul>
+            <div v-else-if="quizData" class="space-y-5">
+                <div class="bg-[#F8F9FD] p-5 rounded-xl flex flex-col md:flex-row items-center gap-5">
+                    <img :src="quizData.image_cover || 'https://placehold.co/300x300'" :alt="quizData.title"
+                        class="w-full max-w-[300px] h-full max-h-[300px] object-cover rounded-xl" />
+
+                    <div class="space-y-5 text-center md:text-left w-full">
+                        <div class="flex justify-center md:justify-start">
+                            <div class="px-4 py-2 bg-blue-50 text-blue-500 rounded-lg">
+                                <span>{{ quizData.category_quiz?.name || 'Quiz' }}</span>
+                            </div>
+                        </div>
+
+                        <h1 class="text-3xl font-bold">{{ quizData.title }}</h1>
+
+                        <div class="flex items-center gap-5 justify-center md:justify-start">
+                            <div class="flex items-center gap-2">
+                                <MessageCircleQuestion class="w-4 h-4" />
+                                <span>
+                                    {{ quizData.total_questions }}
+                                    <span class="hidden sm:inline">questions</span>
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <Clock class="w-4 h-4" />
+                                <span>{{ quizData.time_limit }} minutes</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 justify-center md:justify-start">
+                            <div class="flex">
+                                <button @click="$emit('start')"
+                                    class="text-center w-[200px] bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer px-5 py-2 rounded-full text-white">
+                                    Play Now
+                                </button>
+                            </div>
+
+                            <div class="flex">
+                                <button @click="$emit('cancel')"
+                                    class="text-center w-[150px] border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer px-5 py-2 rounded-full text-gray-700">
+                                    Back
+                                </button>
+                            </div>
+
+                            <div class="flex relative" ref="shareMenuRef">
+                                <button @click="toggleShare"
+                                    class="border border-gray-200 flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-100 cursor-pointer">
+                                    <Share2 class="w-4 h-4 text-gray-700" />
+                                </button>
+
+                                <div v-if="showShareMenu"
+                                    class="absolute top-12 right-0 bg-white rounded-lg shadow-lg border border-gray-200 w-50 z-10">
+                                    <button v-for="(option, index) in shareOptions" :key="index" @click="option.action"
+                                        class="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-sm cursor-pointer">
+                                        <component :is="option.icon" />
+                                        {{ option.name }}
+                                    </button>
+                                    <hr class="my-2 border-0.5 border-gray-200" />
+                                    <button @click="copyLink"
+                                        class="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3 text-sm cursor-pointer">
+                                        <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                        </svg>
+                                        {{ copied ? 'Copied!' : 'Copy Link' }}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-gray-700">Test your knowledge with this engaging quiz. Read the instructions
+                            carefully before starting.</p>
+                    </div>
                 </div>
 
-                <div class="bg-red-50 border border-red-200 rounded-xl p-6 md:p-8">
-                    <h3 class="font-semibold text-red-600 mb-3 text-xl">
-                        Quiz Restrictions
-                    </h3>
-                    <div class="space-y-3 text-xs md:text-sm text-gray-700">
-                        <p><strong>Switching Tab / Window</strong> - Quiz will be immediately terminated</p>
-                        <p><strong>Screenshot / Screen Record</strong> - Will be detected by system</p>
-                        <p><strong>Copy-Paste</strong> - Disabled during quiz</p>
-                        <p><strong>Developer Tools</strong> - Access blocked</p>
-                        <p><strong>Right Click</strong> - Disabled</p>
+                <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 md:p-8">
+                        <h3 class="font-semibold text-blue-700 mb-3 text-xl">
+                            Quiz Information
+                        </h3>
+                        <ul class="space-y-2 text-gray-700 text-sm md:text-base">
+                            <li><strong>Number of Questions:</strong> {{ quizData.total_questions }} questions</li>
+                            <li><strong>Time Limit:</strong> {{ quizData.time_limit }} minutes</li>
+                            <li><strong>Type:</strong> Multiple Choice (A–D)</li>
+                            <li><strong>Points Per Question:</strong> 10 Points</li>
+                        </ul>
                     </div>
-                    <div class="mt-4 p-3 bg-red-100 rounded-lg">
-                        <p class="text-xs md:text-sm text-red-800 font-semibold">
-                            Violating the rules will result in automatic quiz termination!
-                        </p>
+
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-6 md:p-8">
+                        <h3 class="font-semibold text-red-600 mb-3 text-xl">
+                            Quiz Restrictions
+                        </h3>
+                        <div class="space-y-3 text-xs md:text-sm text-gray-700">
+                            <p><strong>Switching Tab / Window</strong> - Quiz will be immediately terminated</p>
+                            <p><strong>Screenshot / Screen Record</strong> - Will be detected by system</p>
+                            <p><strong>Copy-Paste</strong> - Disabled during quiz</p>
+                            <p><strong>Developer Tools</strong> - Access blocked</p>
+                            <p><strong>Right Click</strong> - Disabled</p>
+                        </div>
+                        <div class="mt-4 p-3 bg-red-100 rounded-lg">
+                            <p class="text-xs md:text-sm text-red-800 font-semibold">
+                                ⚠️ Violating the rules will result in automatic quiz termination!
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <div v-else class="text-center py-20">
+                <p class="text-gray-500 text-lg">Quiz not found</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { MessageCircleQuestion, Play, Share2 } from "lucide-vue-next";
+import { MessageCircleQuestion, Share2, Clock } from "lucide-vue-next";
 import { ref, onMounted, onUnmounted, h } from "vue";
+
+defineProps({
+    quizData: {
+        type: Object,
+        default: null
+    },
+    isLoading: {
+        type: Boolean,
+        default: false
+    }
+});
+
+defineEmits(['start', 'cancel']);
 
 const showShareMenu = ref(false);
 const copied = ref(false);
@@ -191,7 +230,7 @@ const getCurrentUrl = () => {
 
 const shareToWhatsApp = () => {
     const url = getCurrentUrl();
-    const text = "Check out this Learn English quiz!";
+    const text = "Check out this quiz!";
     window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
     showShareMenu.value = false;
 };
@@ -204,7 +243,7 @@ const shareToFacebook = () => {
 
 const shareToTelegram = () => {
     const url = getCurrentUrl();
-    const text = "Check out this Learn English quiz!";
+    const text = "Check out this quiz!";
     window.open(`https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
     showShareMenu.value = false;
 };
@@ -227,12 +266,5 @@ const copyLink = async () => {
     } catch (err) {
         console.error('Failed to copy:', err);
     }
-};
-</script>
-
-<script>
-export default {
-    name: "WelcomeScreen",
-    emits: ["start"],
 };
 </script>

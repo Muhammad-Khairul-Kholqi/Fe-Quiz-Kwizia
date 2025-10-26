@@ -27,7 +27,7 @@
                                 <span>{{ quiz.subject }}</span>
                             </div>
                         </div>
-                        <h3 class="text-md font-bold group-hover:text-blue-600 mt-2">{{ quiz.title }}</h3>
+                        <h3 class="text-md font-bold group-hover:text-blue-600 mt-2 line-clamp-2">{{ quiz.title }}</h3>
                     </div>
                 </div>
             </div>
@@ -37,6 +37,7 @@
 
 <script setup>
 import LoadingSkeleton from '../../ui/LoadingSkeleton.vue';
+
 defineProps({
     popularQuizzes: {
         type: Array,
@@ -46,10 +47,6 @@ defineProps({
         type: String,
         default: ""
     },
-    isLoading: {
-        type: Boolean,
-        default: false
-    }
 });
 
 defineEmits(['play-quiz']);

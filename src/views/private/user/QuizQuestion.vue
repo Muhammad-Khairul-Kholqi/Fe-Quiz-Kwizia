@@ -1,111 +1,127 @@
 <template>
     <div>
-        <WelcomeScreen v-if="!quizStarted && !quizFinished" @start="handleStart" @cancel="handleCancel" />
+        <WelcomeScreen v-if="!quizStarted && !quizFinished" :quiz-data="quizData" :is-loading="isLoading"
+            @start="handleStart" @cancel="handleCancel" />
 
-        <QuizScreen v-if="quizStarted && !quizFinished" :questions="questions" :timeLimit="600"
-            @finish="handleFinish" />
+        <QuizScreen v-if="quizStarted && !quizFinished" :quiz-data="quizData" :started-at="startedAt"
+            @finish="handleFinish" @terminate="handleTerminate" />
 
-        <EndScreen v-if="quizFinished" :questions="questions" :selectedAnswers="userAnswers" @restart="handleCancel" />
+        <EndScreen v-if="quizFinished" :result-data="resultData" @restart="handleRestart" @back="handleCancel" />
     </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import WelcomeScreen from '../../../components/sections/ScreenQuiz/WelcomeScreen.vue';
 import QuizScreen from '../../../components/sections/ScreenQuiz/QuizScreen.vue';
 import EndScreen from '../../../components/sections/ScreenQuiz/EndScreen.vue';
+import { getQuizForPlay, submitQuizAnswers } from '../../../api/quizApi';
+import Swal from 'sweetalert2';
 
-export default {
-    name: 'App',
-    components: {
-        WelcomeScreen,
-        QuizScreen,
-        EndScreen
-    },
-    data() {
-        return {
-            quizStarted: false,
-            quizFinished: false,
-            userAnswers: {},
-            questions: [
-                {
-                    id: 1,
-                    question: "Berapakah hasil dari 15 + 27?",
-                    options: ["40", "42", "43", "45"],
-                    correctAnswer: 1
-                },
-                {
-                    id: 2,
-                    question: "Jika x + 5 = 12, berapakah nilai x?",
-                    options: ["5", "6", "7", "8"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 3,
-                    question: "Berapakah hasil dari 8 × 9?",
-                    options: ["63", "72", "81", "90"],
-                    correctAnswer: 1
-                },
-                {
-                    id: 4,
-                    question: "Luas persegi dengan sisi 6 cm adalah?",
-                    options: ["24 cm²", "30 cm²", "36 cm²", "42 cm²"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 5,
-                    question: "Berapakah hasil dari 144 ÷ 12?",
-                    options: ["10", "11", "12", "13"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 6,
-                    question: "Jika 2x = 16, berapakah nilai x?",
-                    options: ["6", "7", "8", "9"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 7,
-                    question: "Berapakah 25% dari 200?",
-                    options: ["25", "40", "50", "75"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 8,
-                    question: "Keliling lingkaran dengan diameter 14 cm (π = 22/7)?",
-                    options: ["22 cm", "44 cm", "66 cm", "88 cm"],
-                    correctAnswer: 1
-                },
-                {
-                    id: 9,
-                    question: "Berapakah hasil dari 5² + 3²?",
-                    options: ["30", "32", "34", "36"],
-                    correctAnswer: 2
-                },
-                {
-                    id: 10,
-                    question: "Jika a = 3 dan b = 4, berapakah a² + b²?",
-                    options: ["12", "24", "25", "49"],
-                    correctAnswer: 2
-                }
-            ]
+const route = useRoute();
+const router = useRouter();
+
+const quizStarted = ref(false);
+const quizFinished = ref(false);
+const quizData = ref(null);
+const resultData = ref(null);
+const isLoading = ref(false);
+const startedAt = ref(null);
+
+const fetchQuizData = async () => {
+    try {
+        isLoading.value = true;
+        const quizId = route.params.id;
+        const response = await getQuizForPlay(quizId);
+
+        if (response.success && response.data) {
+            quizData.value = response.data;
         }
-    },
-    methods: {
-        handleStart() {
-            this.quizStarted = true;
-            this.quizFinished = false;
-            this.userAnswers = {};
-        },
-        handleCancel() {
-            this.quizStarted = false;
-            this.quizFinished = false;
-            this.userAnswers = {};
-        },
-        handleFinish(answers) {
-            this.userAnswers = answers;
-            this.quizStarted = false;
-            this.quizFinished = true;
-        }
+    } catch (error) {
+        console.error('Error fetching quiz:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to load quiz. Redirecting...',
+            confirmButtonColor: '#3b82f6'
+        }).then(() => {
+            router.push('/app/quiz');
+        });
+    } finally {
+        isLoading.value = false;
     }
-}
+};
+
+const handleStart = () => {
+    quizStarted.value = true;
+    quizFinished.value = false;
+    startedAt.value = new Date().toISOString();
+};
+
+const handleCancel = () => {
+    router.push('/app/quiz');
+};
+
+const handleRestart = () => {
+    quizStarted.value = false;
+    quizFinished.value = false;
+    resultData.value = null;
+    startedAt.value = null;
+    fetchQuizData();
+};
+
+const handleFinish = async (answers) => {
+    try {
+        const formattedAnswers = Object.keys(answers).map(questionIndex => {
+            const question = quizData.value.questions[questionIndex];
+            const answerIndex = answers[questionIndex];
+            const answerLetter = ['A', 'B', 'C', 'D'][answerIndex];
+
+            return {
+                question_id: question.id,
+                answer: answerLetter
+            };
+        });
+
+        const response = await submitQuizAnswers(
+            quizData.value.id,
+            formattedAnswers,
+            startedAt.value
+        );
+
+        if (response.success && response.data) {
+            resultData.value = response.data;
+            quizStarted.value = false;
+            quizFinished.value = true;
+
+            if (response.data.is_perfect) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '🎉 Perfect Score!',
+                    text: response.message,
+                    confirmButtonColor: '#3b82f6'
+                });
+            }
+        }
+    } catch (error) {
+        console.error('Error submitting quiz:', error);
+    }
+};
+
+const handleTerminate = () => {
+    Swal.fire({
+        icon: 'error',
+        title: 'Quiz Terminated!',
+        text: 'You violated the quiz rules. The quiz has been terminated.',
+        confirmButtonColor: '#ef4444',
+        allowOutsideClick: false
+    }).then(() => {
+        router.push('/app/quiz');
+    });
+};
+
+onMounted(() => {
+    fetchQuizData();
+});
 </script>

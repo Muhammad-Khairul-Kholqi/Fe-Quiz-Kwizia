@@ -171,7 +171,7 @@ export const deleteQuiz = async (id) => {
 
 export const getQuizForPlay = async (quizId) => {
     try {
-        const response = await apiClient.get(`/play/${quizId}`)
+        const response = await apiClient.get(`/attempt/play/${quizId}`)
         console.log('Get Quiz for Play response:', response.data)
         return response.data
     } catch (error) {
@@ -187,7 +187,7 @@ export const getQuizForPlay = async (quizId) => {
 
 export const submitQuizAnswers = async (quizId, answers, startedAt) => {
     try {
-        const response = await apiClient.post(`/submit/${quizId}`, {
+        const response = await apiClient.post(`/attempt/submit/${quizId}`, {
             answers,
             started_at: startedAt
         })
@@ -207,7 +207,7 @@ export const submitQuizAnswers = async (quizId, answers, startedAt) => {
 
 export const checkQuizCompletion = async (quizId) => {
     try {
-        const response = await apiClient.get(`/check/${quizId}`)
+        const response = await apiClient.get(`/attempt/check/${quizId}`)
         console.log('Check Quiz Completion response:', response.data)
         return response.data
     } catch (error) {
@@ -218,7 +218,7 @@ export const checkQuizCompletion = async (quizId) => {
 
 export const getMyQuizHistory = async (limit = 10) => {
     try {
-        const response = await apiClient.get('/my-history', {
+        const response = await apiClient.get('/attempt/my-history', {
             params: {
                 limit
             }
@@ -227,21 +227,6 @@ export const getMyQuizHistory = async (limit = 10) => {
         return response.data
     } catch (error) {
         console.error('Error fetching quiz history:', error)
-        throw error
-    }
-}
-
-export const getQuizLeaderboard = async (quizId, limit = 10) => {
-    try {
-        const response = await apiClient.get(`/quiz/${quizId}/leaderboard`, {
-            params: {
-                limit
-            }
-        })
-        console.log('Get Quiz Leaderboard response:', response.data)
-        return response.data
-    } catch (error) {
-        console.error('Error fetching quiz leaderboard:', error)
         throw error
     }
 }

@@ -79,7 +79,8 @@
                             <span>{{ quiz.subject }}</span>
                         </div>
                     </div>
-                    <h3 class="lg:text-xl md:text-xl sm:text-lg font-bold group-hover:text-blue-600">{{ quiz.title }}
+                    <h3 class="lg:text-xl md:text-xl sm:text-lg font-bold group-hover:text-blue-600 line-clamp-2">{{
+                        quiz.title }}
                     </h3>
                     <div class="flex flex-wrap items-center gap-2 text-gray-600">
                         <div class="flex items-center gap-2">
