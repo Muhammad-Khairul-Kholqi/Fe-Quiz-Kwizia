@@ -31,6 +31,7 @@ import BlogData from "../views/private/admin/BlogData.vue";
 import CategoryQuiz from "../views/private/admin/CategoryQuiz.vue";
 import Avatar from "../views/private/admin/Avatar.vue";
 import ContactEmail from "../views/private/admin/ContactEmail.vue";
+import QuizData from "../views/private/admin/QuizData.vue";
 
 // layout
 import MainLayout from "../layouts/MainLayout.vue";
@@ -125,16 +126,6 @@ const routes = [
         ]
     },
 
-    // {
-    //     path: "/app/quiz-question",
-    //     component: QuizQuestion,
-    //     meta: {
-    //         title: "Quiz Page",
-    //         requiresAuth: true,
-    //         role: 'user'
-    //     }
-    // },
-
     // admin routes (requires auth and admin role)
     {
         path: "/private/admin/",
@@ -211,6 +202,15 @@ const routes = [
                 component: ContactEmail,
                 meta: {
                     title: "Contact",
+                    requiresAuth: true,
+                    role: 'admin'
+                }
+            },
+            {
+                path: "quizzes",
+                component: QuizData,
+                meta: {
+                    title: "Quizzes",
                     requiresAuth: true,
                     role: 'admin'
                 }
