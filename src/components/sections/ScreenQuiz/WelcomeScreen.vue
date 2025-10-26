@@ -43,19 +43,15 @@
                         </div>
 
                         <div class="flex items-center gap-3 justify-center md:justify-start">
-                            <div class="flex">
-                                <button @click="$emit('start')"
-                                    class="text-center w-[200px] bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer px-5 py-2 rounded-full text-white">
-                                    Play Now
-                                </button>
-                            </div>
+                            <button @click="$emit('start')"
+                                class="text-center bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer px-5 py-2 rounded-full text-white">
+                                Play Now
+                            </button>
 
-                            <div class="flex">
-                                <button @click="$emit('cancel')"
-                                    class="text-center w-[150px] border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer px-5 py-2 rounded-full text-gray-700">
-                                    Back
-                                </button>
-                            </div>
+                            <button @click="$emit('cancel')"
+                                class="text-center border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer px-5 py-2 rounded-full text-gray-700">
+                                Back
+                            </button>
 
                             <div class="flex relative" ref="shareMenuRef">
                                 <button @click="toggleShare"

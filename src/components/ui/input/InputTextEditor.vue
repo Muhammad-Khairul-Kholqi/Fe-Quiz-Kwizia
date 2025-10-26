@@ -5,27 +5,11 @@
             <span v-if="required" class="text-red-500">*</span>
         </label>
 
-        <div class="border border-gray-300 rounded-lg overflow-hidden bg-white"
-            :class="{
-                'border-red-500 focus-within:ring-red-500 focus-within:border-red-500': error,
-                'bg-gray-50 cursor-not-allowed': disabled
-            }">
-            <div v-if="!readonly && !disabled" class="bg-gray-50 border-b border-gray-200 p-2 flex flex-wrap gap-1">
-                <button v-for="tool in tools" :key="tool.name" @click.prevent="applyFormat(tool.action, tool.value)"
-                    :title="tool.title" type="button"
-                    class="p-2 hover:bg-gray-200 rounded transition-colors text-gray-600 hover:text-gray-900"
-                    :class="{ 'bg-gray-200': activeFormats.includes(tool.name) }">
-                    <component :is="tool.icon" :size="18" v-if="tool.icon" />
-                    <span v-else class="text-xs font-semibold px-1">{{ tool.label }}</span>
-                </button>
-            </div>
-
-            <div ref="editorRef" contenteditable="true" @input="handleInput" @keydown="handleKeydown"
-                @mouseup="updateActiveFormats" @keyup="updateActiveFormats" :class="{
-                    'cursor-not-allowed': disabled,
-                    'bg-gray-50': disabled
-                }" class="min-h-[150px] max-h-[400px] overflow-y-auto p-4 outline-none prose prose-sm max-w-none"
-                :data-placeholder="placeholder"></div>
+        <div class="border border-gray-300 rounded-lg overflow-hidden bg-white" :class="{
+            'border-red-500 focus-within:ring-2 focus-within:ring-red-500 focus-within:border-red-500': error,
+            'bg-gray-50 cursor-not-allowed': disabled
+        }">
+            <div ref="editorContainer" class="min-h-[200px]"></div>
         </div>
 
         <p v-if="error" class="mt-2 text-sm text-red-600">{{ error }}</p>
@@ -34,18 +18,9 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue';
-import {
-    Bold,
-    Italic,
-    Underline,
-    List,
-    ListOrdered,
-    Heading1,
-    Heading2,
-    Link,
-    Quote
-} from 'lucide-vue-next';
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
+import Quill from 'quill';
+import 'quill/dist/quill.snow.css';
 
 const props = defineProps({
     modelValue: {
@@ -84,166 +59,182 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue']);
 
-const editorRef = ref(null);
-const activeFormats = ref([]);
-
-const tools = [
-    { name: 'bold', action: 'bold', icon: Bold, title: 'Bold (Ctrl+B)' },
-    { name: 'italic', action: 'italic', icon: Italic, title: 'Italic (Ctrl+I)' },
-    { name: 'underline', action: 'underline', icon: Underline, title: 'Underline (Ctrl+U)' },
-    { name: 'h1', action: 'formatBlock', value: '<h1>', icon: Heading1, title: 'Heading 1' },
-    { name: 'h2', action: 'formatBlock', value: '<h2>', icon: Heading2, title: 'Heading 2' },
-    { name: 'ul', action: 'insertUnorderedList', icon: List, title: 'Bullet List' },
-    { name: 'ol', action: 'insertOrderedList', icon: ListOrdered, title: 'Numbered List' },
-    { name: 'quote', action: 'formatBlock', value: '<blockquote>', icon: Quote, title: 'Quote' },
-    { name: 'link', action: 'createLink', icon: Link, title: 'Insert Link' },
-];
+const editorContainer = ref(null);
+let quillInstance = null;
 
 onMounted(() => {
-    if (props.modelValue && editorRef.value) {
-        editorRef.value.innerHTML = props.modelValue;
-    }
+    if (editorContainer.value) {
+        quillInstance = new Quill(editorContainer.value, {
+            theme: 'snow',
+            placeholder: props.placeholder,
+            readOnly: props.disabled || props.readonly,
+            modules: {
+                toolbar: props.disabled || props.readonly ? false : [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                    ['blockquote', 'link'],
+                    ['clean']
+                ]
+            }
+        });
 
-    if (props.disabled || props.readonly) {
-        editorRef.value.contentEditable = 'false';
+        if (props.modelValue) {
+            quillInstance.root.innerHTML = props.modelValue;
+        }
+
+        quillInstance.on('text-change', () => {
+            const html = quillInstance.root.innerHTML;
+            if (html === '<p><br></p>') {
+                emit('update:modelValue', '');
+            } else {
+                emit('update:modelValue', html);
+            }
+        });
     }
 });
 
 watch(() => props.modelValue, (newValue) => {
-    if (editorRef.value && editorRef.value.innerHTML !== newValue) {
-        editorRef.value.innerHTML = newValue || '';
+    if (quillInstance && quillInstance.root.innerHTML !== newValue) {
+        const currentSelection = quillInstance.getSelection();
+        quillInstance.root.innerHTML = newValue || '';
+        if (currentSelection) {
+            quillInstance.setSelection(currentSelection);
+        }
     }
 });
 
 watch(() => [props.disabled, props.readonly], ([newDisabled, newReadonly]) => {
-    if (editorRef.value) {
-        editorRef.value.contentEditable = (!newDisabled && !newReadonly).toString();
+    if (quillInstance) {
+        quillInstance.enable(!newDisabled && !newReadonly);
     }
 });
 
-const handleInput = () => {
-    if (editorRef.value) {
-        const content = editorRef.value.innerHTML;
-        emit('update:modelValue', content);
+onBeforeUnmount(() => {
+    if (quillInstance) {
+        quillInstance = null;
     }
-};
-
-const applyFormat = (command, value = null) => {
-    if (command === 'createLink') {
-        const url = prompt('Enter URL:');
-        if (url) {
-            document.execCommand(command, false, url);
-        }
-    } else if (value) {
-        document.execCommand(command, false, value);
-    } else {
-        document.execCommand(command, false, null);
-    }
-
-    editorRef.value?.focus();
-    updateActiveFormats();
-    handleInput();
-};
-
-const updateActiveFormats = () => {
-    const formats = [];
-
-    if (document.queryCommandState('bold')) formats.push('bold');
-    if (document.queryCommandState('italic')) formats.push('italic');
-    if (document.queryCommandState('underline')) formats.push('underline');
-    if (document.queryCommandState('insertUnorderedList')) formats.push('ul');
-    if (document.queryCommandState('insertOrderedList')) formats.push('ol');
-
-    activeFormats.value = formats;
-};
-
-const handleKeydown = (e) => {
-    if (e.ctrlKey || e.metaKey) {
-        switch (e.key.toLowerCase()) {
-            case 'b':
-                e.preventDefault();
-                applyFormat('bold');
-                break;
-            case 'i':
-                e.preventDefault();
-                applyFormat('italic');
-                break;
-            case 'u':
-                e.preventDefault();
-                applyFormat('underline');
-                break;
-        }
-    }
-};
+});
 </script>
 
-<style scoped>
-[contenteditable]:empty:before {
-    content: attr(data-placeholder);
+<style>
+.ql-container {
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.ql-editor {
+    min-height: 150px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.ql-editor.ql-blank::before {
     color: #9ca3af;
-    pointer-events: none;
+    font-style: normal;
 }
 
-[contenteditable] {
-    outline: none;
+.ql-toolbar.ql-snow {
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    padding: 0.5rem;
 }
 
-:deep(h1) {
+.ql-snow .ql-stroke {
+    stroke: #6b7280;
+}
+
+.ql-snow .ql-fill {
+    fill: #6b7280;
+}
+
+.ql-snow .ql-picker-label {
+    color: #6b7280;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label:hover,
+.ql-toolbar.ql-snow .ql-picker-label.ql-active,
+.ql-toolbar.ql-snow button:hover,
+.ql-toolbar.ql-snow button.ql-active {
+    color: #111827;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label:hover .ql-stroke,
+.ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-stroke,
+.ql-toolbar.ql-snow button:hover .ql-stroke,
+.ql-toolbar.ql-snow button.ql-active .ql-stroke {
+    stroke: #111827;
+}
+
+.ql-toolbar.ql-snow .ql-picker-label:hover .ql-fill,
+.ql-toolbar.ql-snow .ql-picker-label.ql-active .ql-fill,
+.ql-toolbar.ql-snow button:hover .ql-fill,
+.ql-toolbar.ql-snow button.ql-active .ql-fill {
+    fill: #111827;
+}
+
+.ql-container.ql-snow {
+    border: none;
+}
+
+.ql-editor h1 {
     font-size: 2em;
     font-weight: bold;
     margin: 0.67em 0;
+    line-height: 1.2;
 }
 
-:deep(h2) {
+.ql-editor h2 {
     font-size: 1.5em;
     font-weight: bold;
     margin: 0.75em 0;
+    line-height: 1.3;
 }
 
-:deep(h3) {
+.ql-editor h3 {
     font-size: 1.17em;
     font-weight: bold;
     margin: 0.83em 0;
+    line-height: 1.4;
 }
 
-:deep(p) {
-    margin: 1em 0;
-}
-
-:deep(ul),
-:deep(ol) {
-    margin: 1em 0;
-    padding-left: 2em;
-}
-
-:deep(li) {
+.ql-editor p {
     margin: 0.5em 0;
 }
 
-:deep(blockquote) {
+.ql-editor ul,
+.ql-editor ol {
+    padding-left: 1.5em;
+    margin: 0.5em 0;
+}
+
+.ql-editor li {
+    margin: 0.25em 0;
+}
+
+.ql-editor blockquote {
     border-left: 4px solid #e5e7eb;
     padding-left: 1em;
     margin: 1em 0;
     color: #6b7280;
-    font-style: italic;
 }
 
-:deep(a) {
+.ql-editor a {
     color: #3b82f6;
     text-decoration: underline;
 }
 
-:deep(strong),
-:deep(b) {
+.ql-editor strong {
     font-weight: bold;
 }
 
-:deep(em),
-:deep(i) {
+.ql-editor em {
     font-style: italic;
 }
 
-:deep(u) {
+.ql-editor u {
     text-decoration: underline;
 }
 </style>

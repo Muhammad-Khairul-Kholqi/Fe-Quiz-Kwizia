@@ -5,6 +5,7 @@ import router from './routes/mainRoute.js'
 import {
     MotionPlugin
 } from '@vueuse/motion'
+import 'quill/dist/quill.snow.css'
 
 const app = createApp(App)
 
