@@ -168,3 +168,80 @@ export const deleteQuiz = async (id) => {
         throw error
     }
 }
+
+export const getQuizForPlay = async (quizId) => {
+    try {
+        const response = await apiClient.get(`/play/${quizId}`)
+        console.log('Get Quiz for Play response:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching quiz for play:', error)
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.response ?.data ?.message || 'Failed to fetch quiz'
+        })
+        throw error
+    }
+}
+
+export const submitQuizAnswers = async (quizId, answers, startedAt) => {
+    try {
+        const response = await apiClient.post(`/submit/${quizId}`, {
+            answers,
+            started_at: startedAt
+        })
+        console.log('Submit Quiz response:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error submitting quiz:', error)
+        const errorMessage = error.response ?.data ?.message || 'Failed to submit quiz'
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: errorMessage
+        })
+        throw error
+    }
+}
+
+export const checkQuizCompletion = async (quizId) => {
+    try {
+        const response = await apiClient.get(`/check/${quizId}`)
+        console.log('Check Quiz Completion response:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error checking quiz completion:', error)
+        throw error
+    }
+}
+
+export const getMyQuizHistory = async (limit = 10) => {
+    try {
+        const response = await apiClient.get('/my-history', {
+            params: {
+                limit
+            }
+        })
+        console.log('Get My History response:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching quiz history:', error)
+        throw error
+    }
+}
+
+export const getQuizLeaderboard = async (quizId, limit = 10) => {
+    try {
+        const response = await apiClient.get(`/quiz/${quizId}/leaderboard`, {
+            params: {
+                limit
+            }
+        })
+        console.log('Get Quiz Leaderboard response:', response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error fetching quiz leaderboard:', error)
+        throw error
+    }
+}

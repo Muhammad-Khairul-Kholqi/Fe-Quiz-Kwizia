@@ -50,9 +50,28 @@
             </button>
         </div>
 
-        <div class="space-y-3">
-            <div v-for="(quiz, index) in filteredQuizzes" :key="index"
-                class="flex items-center gap-5 p-5 hover:bg-gray-50 cursor-pointer rounded-xl group">
+        <div v-if="isLoading" class="space-y-3">
+            <div v-for="i in 5" :key="i" class="flex items-center gap-5 p-5 rounded-xl border border-gray-200">
+                <LoadingSkeleton type="rect" width="100px" height="100px" rounded="xl" />
+                <div class="flex-1 space-y-3">
+                    <LoadingSkeleton type="text" width="20%" height="25px" />
+                    <LoadingSkeleton type="text" width="50%" height="30px" />
+                    <div>
+                        <LoadingSkeleton type="text" width="30%" height="20px" class="inline-block mr-4" />
+                        <LoadingSkeleton type="text" width="20%" height="20px" class="inline-block mr-4" />
+                        <LoadingSkeleton type="text" width="15%" height="20px" class="inline-block" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div v-else-if="filteredQuizzes.length === 0" class="text-center py-20">
+            <p class="text-gray-500 text-lg">No quizzes found.</p>
+        </div>
+
+        <div v-else class="space-y-3">
+            <div v-for="(quiz, index) in filteredQuizzes" :key="index" @click="$emit('play-quiz', quiz.id)"
+                class="flex items-center gap-5 p-5 hover:bg-gray-50 cursor-pointer rounded-xl group border border-gray-200 hover:border-blue-300 transition-all">
                 <img :src="quiz.image" :alt="quiz.title" class="w-[100px] h-[100px] rounded-xl object-cover" />
                 <div class="space-y-2">
                     <div class="flex">
@@ -72,6 +91,11 @@
                         </div>
 
                         <div class="flex items-center gap-2">
+                            <Clock class="w-4 h-4" />
+                            <span>{{ quiz.time_limit }} min</span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
                             <Play class="w-4 h-4" />
                             <span>{{ quiz.plays }}</span>
                         </div>
@@ -83,47 +107,31 @@
 </template>
 
 <script setup>
-import { Search, ArrowDownUp, SlidersHorizontal, MessageCircleQuestion, Play } from "lucide-vue-next";
+import { Search, ArrowDownUp, SlidersHorizontal, MessageCircleQuestion, Play, Clock } from "lucide-vue-next";
+import LoadingSkeleton from '../../ui/LoadingSkeleton.vue';
 
 const props = defineProps({
     searchQuery: String,
     selectedSort: String,
     filteredQuizzes: Array,
-    openDropdown: String
+    openDropdown: String,
+    isLoading: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const emit = defineEmits([
     'toggle-dropdown',
     'select-sort',
     'update:search-query',
-    'show-filter-modal'
+    'show-filter-modal',
+    'play-quiz'
 ]);
 
 const sortOptions = ["Latest", "Popularity"];
 
 const handleSortClick = () => {
-    console.log('Sort clicked, current openDropdown:', props.openDropdown);
     emit('toggle-dropdown', 'sort');
 };
 </script>
-
-<style scoped>
-.expand-enter-active,
-.expand-leave-active {
-    transition: all 0.25s ease;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-    opacity: 0;
-    max-height: 0;
-    transform: translateY(-5px);
-}
-
-.expand-enter-to,
-.expand-leave-from {
-    opacity: 1;
-    max-height: 200px;
-    transform: translateY(0);
-}
-</style>

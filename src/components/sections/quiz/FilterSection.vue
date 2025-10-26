@@ -13,7 +13,7 @@
         <div>
             <button @click="$emit('toggle-dropdown', 'subject')"
                 class="w-full flex justify-between items-center px-4 py-3 bg-white border border-gray-300 rounded-lg hover:border-blue-500 transition-colors cursor-pointer">
-                <span class="text-gray-700">{{ selectedSubject || 'Subject' }}</span>
+                <span class="text-gray-700">{{ selectedSubject || 'Category' }}</span>
                 <ChevronDown
                     :class="['transition-transform duration-300', { 'rotate-180': openDropdown === 'subject' }]"
                     size="18" />
@@ -21,11 +21,11 @@
 
             <transition name="expand">
                 <ul v-if="openDropdown === 'subject'"
-                    class="mt-2 w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-                    <li v-for="(subject, index) in subjects" :key="index"
-                        @click="$emit('select-option', 'subject', subject)"
+                    class="mt-2 w-full bg-white border border-gray-200 rounded-lg overflow-hidden max-h-60 overflow-y-auto">
+                    <li v-for="(category, index) in categories" :key="index"
+                        @click="$emit('select-option', 'subject', category.name)"
                         class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-700">
-                        {{ subject }}
+                        {{ category.name }}
                     </li>
                 </ul>
             </transition>
@@ -80,7 +80,7 @@
                     <div>
                         <button @click="$emit('toggle-dropdown', 'subject')"
                             class="w-full flex justify-between items-center px-4 py-3 bg-white border border-gray-300 rounded-lg hover:border-blue-500 transition-colors cursor-pointer">
-                            <span class="text-gray-700">{{ selectedSubject || 'Subject' }}</span>
+                            <span class="text-gray-700">{{ selectedSubject || 'Category' }}</span>
                             <ChevronDown
                                 :class="['transition-transform duration-300', { 'rotate-180': openDropdown === 'subject' }]"
                                 size="18" />
@@ -88,11 +88,11 @@
 
                         <transition name="expand">
                             <ul v-if="openDropdown === 'subject'"
-                                class="mt-2 w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
-                                <li v-for="(subject, index) in subjects" :key="index"
-                                    @click="$emit('select-option', 'subject', subject)"
+                                class="mt-2 w-full bg-white border border-gray-200 rounded-lg overflow-hidden max-h-60 overflow-y-auto">
+                                <li v-for="(category, index) in categories" :key="index"
+                                    @click="$emit('select-option', 'subject', category.name)"
                                     class="px-4 py-2 hover:bg-blue-50 cursor-pointer text-gray-700">
-                                    {{ subject }}
+                                    {{ category.name }}
                                 </li>
                             </ul>
                         </transition>
@@ -132,7 +132,11 @@ defineProps({
     selectedSubject: String,
     selectedQuestions: String,
     activeFilters: Array,
-    showFilterModal: Boolean
+    showFilterModal: Boolean,
+    categories: {
+        type: Array,
+        default: () => []
+    }
 });
 
 defineEmits([
@@ -142,8 +146,7 @@ defineEmits([
     'update:show-filter-modal'
 ]);
 
-const subjects = ["Science", "Math", "History", "English", "Geography"];
-const questionRanges = ["1 - 5", "1 - 10", "1 - 15", "1 - 20", "1 - 25"];
+const questionRanges = ["1 - 5", "6 - 10", "11 - 15", "16 - 20", "21 - 30"];
 </script>
 
 <style scoped>
@@ -162,7 +165,7 @@ const questionRanges = ["1 - 5", "1 - 10", "1 - 15", "1 - 20", "1 - 25"];
 .expand-enter-to,
 .expand-leave-from {
     opacity: 1;
-    max-height: 200px;
+    max-height: 300px;
     transform: translateY(0);
 }
 

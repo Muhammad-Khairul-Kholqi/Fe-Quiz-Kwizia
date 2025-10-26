@@ -6,25 +6,26 @@
                     <div class="w-full lg:w-[25%]">
                         <FilterSection :open-dropdown="openDropdown" :selected-subject="selectedSubject"
                             :selected-questions="selectedQuestions" :active-filters="activeFilters"
-                            :show-filter-modal="showFilterModal" @toggle-dropdown="toggleDropdown"
-                            @select-option="selectOption" @remove-filter="removeFilter"
-                            @update:show-filter-modal="showFilterModal = $event" />
+                            :show-filter-modal="showFilterModal" :categories="categories"
+                            @toggle-dropdown="toggleDropdown" @select-option="selectOption"
+                            @remove-filter="removeFilter" @update:show-filter-modal="showFilterModal = $event" />
                     </div>
 
                     <div class="w-full lg:w-[45%]">
                         <QuizzesSection :search-query="searchQuery" :selected-sort="selectedSort"
-                            :filtered-quizzes="filteredQuizzes" :open-dropdown="openDropdown"
+                            :filtered-quizzes="filteredQuizzes" :open-dropdown="openDropdown" :is-loading="isLoading"
                             @toggle-dropdown="toggleDropdown" @select-sort="selectSort"
-                            @update:search-query="searchQuery = $event" @show-filter-modal="showFilterModal = true" />
+                            @update:search-query="searchQuery = $event" @show-filter-modal="showFilterModal = true"
+                            @play-quiz="handlePlayQuiz" />
                     </div>
 
                     <div class="hidden lg:block lg:w-[30%]">
-                        <PopularSection :popular-quizzes="popularQuizzes" />
+                        <PopularSection :popular-quizzes="popularQuizzes" @play-quiz="handlePlayQuiz" />
                     </div>
                 </div>
 
                 <div class="lg:hidden mt-5">
-                    <PopularSection :popular-quizzes="popularQuizzes" />
+                    <PopularSection :popular-quizzes="popularQuizzes" @play-quiz="handlePlayQuiz" />
                 </div>
             </div>
         </div>
@@ -32,10 +33,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import FilterSection from "../../../components/sections/quiz/FilterSection.vue";
 import PopularSection from "../../../components/sections/quiz/PopularSection.vue";
 import QuizzesSection from "../../../components/sections/quiz/QuizzesSection.vue";
+import { getAllQuizzes } from "../../../api/quizApi";
+import { getCategoryQuiz } from "../../../api/categoryQuizApi";
+
+const router = useRouter();
 
 const openDropdown = ref(null);
 const selectedSubject = ref("");
@@ -43,67 +49,10 @@ const selectedQuestions = ref("");
 const showFilterModal = ref(false);
 const searchQuery = ref("");
 const selectedSort = ref("Latest");
+const isLoading = ref(false);
 
-const quizzes = ref([
-    {
-        image: "https://placehold.co/100x100",
-        subject: "Science",
-        title: "Keanekaragaman Hayati",
-        totalQuestions: 5,
-        plays: 874,
-        date: new Date("2024-03-15")
-    },
-    {
-        image: "https://placehold.co/100x100",
-        subject: "Math",
-        title: "Aljabar Linear",
-        totalQuestions: 10,
-        plays: 1245,
-        date: new Date("2024-03-20")
-    },
-    {
-        image: "https://placehold.co/100x100",
-        subject: "History",
-        title: "Sejarah Indonesia",
-        totalQuestions: 8,
-        plays: 652,
-        date: new Date("2024-03-10")
-    },
-    {
-        image: "https://placehold.co/100x100",
-        subject: "English",
-        title: "Grammar Basics",
-        totalQuestions: 15,
-        plays: 2103,
-        date: new Date("2024-03-25")
-    },
-    {
-        image: "https://placehold.co/100x100",
-        subject: "Geography",
-        title: "Peta Dunia",
-        totalQuestions: 7,
-        plays: 489,
-        date: new Date("2024-03-18")
-    }
-]);
-
-const popularQuizzes = ref([
-    {
-        image: "https://placehold.co/70x70",
-        subject: "Science",
-        title: "Biologi Molekuler"
-    },
-    {
-        image: "https://placehold.co/70x70",
-        subject: "Math",
-        title: "Kalkulus Diferensial"
-    },
-    {
-        image: "https://placehold.co/70x70",
-        subject: "History",
-        title: "Perang Dunia II"
-    }
-]);
+const quizzes = ref([]);
+const categories = ref([]);
 
 watch(showFilterModal, (newVal) => {
     if (newVal) {
@@ -112,6 +61,43 @@ watch(showFilterModal, (newVal) => {
         document.body.style.overflow = '';
     }
 });
+
+const fetchQuizzes = async () => {
+    try {
+        isLoading.value = true;
+        const response = await getAllQuizzes();
+
+        if (response.success && response.data) {
+            quizzes.value = response.data.map(quiz => ({
+                ...quiz,
+                image: quiz.image_cover,
+                subject: quiz.category_quiz?.name || 'Uncategorized',
+                category_id: quiz.category_id,
+                title: quiz.title,
+                totalQuestions: quiz.total_questions,
+                plays: quiz.total_players || 0,
+                time_limit: quiz.time_limit,
+                date: new Date(quiz.created_at)
+            }));
+        }
+    } catch (error) {
+        console.error('Error fetching quizzes:', error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+const fetchCategories = async () => {
+    try {
+        const response = await getCategoryQuiz();
+
+        if (response.success && response.data) {
+            categories.value = response.data;
+        }
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+};
 
 const toggleDropdown = (type) => {
     openDropdown.value = openDropdown.value === type ? null : type;
@@ -166,5 +152,26 @@ const filteredQuizzes = computed(() => {
     }
 
     return result;
+});
+
+const popularQuizzes = computed(() => {
+    return [...quizzes.value]
+        .sort((a, b) => b.plays - a.plays)
+        .slice(0, 3)
+        .map(quiz => ({
+            id: quiz.id,
+            image: quiz.image,
+            subject: quiz.subject,
+            title: quiz.title
+        }));
+});
+
+const handlePlayQuiz = (quizId) => {
+    router.push(`/app/quiz-question/${quizId}`);
+};
+
+onMounted(() => {
+    fetchCategories();
+    fetchQuizzes();
 });
 </script>
