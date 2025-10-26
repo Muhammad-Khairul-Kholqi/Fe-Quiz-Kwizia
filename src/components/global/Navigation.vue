@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="hidden md:flex justify-center py-3 px-5 border-b border-gray-200 bg-white/40 backdrop-blur-md sticky top-0 z-40">
+    class="hidden md:flex justify-center py-3 px-5 border-b border-gray-200 bg-white/40 backdrop-blur-2xl sticky top-0 z-40">
     <div class="w-full max-w-[1500px]">
       <div class="flex items-center justify-between gap-5">
         <div class="flex items-center gap-8">
