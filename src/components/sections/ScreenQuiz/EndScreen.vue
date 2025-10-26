@@ -1,56 +1,104 @@
 <template>
     <div class="flex justify-center p-5 select-none">
         <div class="w-full max-w-[1500px]">
-            <div class="bg-white rounded-lg shadow-lg p-4 sm:p-8 text-center">
-                <div class="mb-6">
-                    <svg class="w-16 h-16 sm:w-20 sm:h-20 mx-auto text-green-500" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
+            <div class="bg-[#F8F9FD] p-5 rounded-xl flex flex-col md:flex-row items-center gap-5">
+                <div class="w-full max-w-[300px] h-[300px] flex items-center justify-center bg-white rounded-xl">
+                    <svg class="w-32 h-32 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">Quiz Selesai!</h1>
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6 mb-6">
-                    <p class="text-4xl sm:text-5xl font-bold text-green-600 mb-2">{{ score }}/{{ totalQuestions }}</p>
-                    <p class="text-sm sm:text-base text-gray-600">Jawaban Benar</p>
-                </div>
 
-                <div v-if="showDetails" class="mb-6 text-left max-w-2xl mx-auto">
-                    <h2 class="text-lg sm:text-xl font-bold text-gray-800 mb-4">Detail Jawaban:</h2>
-                    <div class="space-y-3">
-                        <div v-for="(question, index) in questions" :key="index" class="border rounded-lg p-3 sm:p-4"
-                            :class="selectedAnswers[index] === question.correctAnswer ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'">
-                            <div class="flex items-start gap-2 mb-2">
-                                <span class="font-semibold text-sm sm:text-base">{{ index + 1 }}.</span>
-                                <p class="text-sm sm:text-base text-gray-800">{{ question.question }}</p>
-                            </div>
-                            <div class="ml-6 text-xs sm:text-sm">
-                                <p class="text-gray-600">
-                                    Jawaban Anda:
-                                    <span
-                                        :class="selectedAnswers[index] === question.correctAnswer ? 'text-green-600 font-semibold' : 'text-red-600 font-semibold'">
-                                        {{ selectedAnswers[index] !== undefined ?
-                                            question.options[selectedAnswers[index]] : 'Tidak dijawab' }}
-                                    </span>
-                                </p>
-                                <p v-if="selectedAnswers[index] !== question.correctAnswer" class="text-green-600">
-                                    Jawaban Benar: <span class="font-semibold">{{
-                                        question.options[question.correctAnswer] }}</span>
-                                </p>
+                <div class="space-y-5 text-center md:text-left w-full">
+                    <div class="flex justify-center md:justify-start">
+                        <div class="px-4 py-2 bg-green-50 text-green-600 rounded-lg">
+                            <span>Quiz Selesai</span>
+                        </div>
+                    </div>
+
+                    <h1 class="text-3xl font-bold">Hasil Quiz Anda</h1>
+
+                    <div class="flex items-center gap-5 justify-center md:justify-start">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span class="font-semibold text-lg">
+                                {{ score }}/{{ totalQuestions }}
+                                <span class="text-gray-600 font-normal">Benar</span>
+                            </span>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z">
+                                </path>
+                            </svg>
+                            <span class="font-semibold text-lg">{{ score * 10 }} Poin</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 justify-center md:justify-start">
+                        <div class="flex">
+                            <button @click="$emit('restart')"
+                                class="text-center w-[200px] bg-blue-600 hover:bg-blue-700 transition-colors cursor-pointer px-5 py-2 rounded-full text-white">
+                                Kembali ke Awal
+                            </button>
+                        </div>
+
+                        <div class="flex">
+                            <button @click="toggleDetails"
+                                class="border border-gray-200 flex items-center justify-center px-5 py-2 rounded-full hover:bg-gray-100 cursor-pointer bg-white">
+                                <span class="text-gray-700 text-sm">{{ showDetails ? 'Sembunyikan' : 'Lihat' }}
+                                    Detail</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-gray-700">
+                        {{ score === totalQuestions ? 'Sempurna! Anda berhasil menjawab semua pertanyaan dengan benar.'
+                            :
+                            score >= totalQuestions * 0.7 ? 'Bagus! Hasil yang memuaskan.' :
+                        'Terus berlatih untuk hasil yang lebih baik!' }}
+                    </p>
+                </div>
+            </div>
+
+            <div v-if="showDetails" class="mt-5">
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 md:p-8">
+                    <h3 class="font-semibold text-blue-700 mb-5 text-xl">
+                        Detail Jawaban
+                    </h3>
+                    <div class="space-y-4">
+                        <div v-for="(question, index) in questions" :key="index"
+                            class="bg-white rounded-lg p-4 border-l-4"
+                            :class="selectedAnswers[index] === question.correctAnswer ? 'border-l-green-500' : 'border-l-red-500'">
+                            <div class="flex items-start gap-3 mb-3">
+                                <span class="font-semibold text-gray-700 min-w-[24px]">{{ index + 1 }}.</span>
+                                <div class="flex-1">
+                                    <p class="text-gray-800 font-medium mb-2">{{ question.question }}</p>
+                                    <div class="text-sm space-y-1">
+                                        <p class="text-gray-700">
+                                            <span class="font-medium">Jawaban Anda:</span>
+                                            <span
+                                                :class="selectedAnswers[index] === question.correctAnswer ? 'text-green-600 font-semibold ml-1' : 'text-red-600 font-semibold ml-1'">
+                                                {{ selectedAnswers[index] !== undefined ?
+                                                    question.options[selectedAnswers[index]] : 'Tidak dijawab' }}
+                                            </span>
+                                        </p>
+                                        <p v-if="selectedAnswers[index] !== question.correctAnswer"
+                                            class="text-green-600">
+                                            <span class="font-medium">Jawaban Benar:</span>
+                                            <span class="font-semibold ml-1">{{ question.options[question.correctAnswer]
+                                                }}</span>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                    <button @click="toggleDetails"
-                        class="w-full sm:w-auto px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-sm sm:text-base">
-                        {{ showDetails ? 'Sembunyikan' : 'Lihat' }} Detail Jawaban
-                    </button>
-                    <button @click="$emit('restart')"
-                        class="w-full sm:w-auto px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm sm:text-base">
-                        Kembali ke Awal
-                    </button>
                 </div>
             </div>
         </div>
@@ -97,12 +145,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-* {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-</style>
