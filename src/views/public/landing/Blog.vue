@@ -43,7 +43,7 @@
             </div>
 
             <div v-else-if="paginatedBlogs.length > 0"
-                class="mt-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-center gap-6">
+                class="mt-5 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 items-start gap-6">
                 <RouterLink v-for="(blog, index) in paginatedBlogs" :key="blog.id"
                     :to="`/detail-blog/${blog.id}/${slugify(blog.title)}`"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 200)"
