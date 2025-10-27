@@ -22,7 +22,7 @@
                     class="flex items-center gap-3 rounded-lg cursor-pointer group">
                     <div class="relative overflow-hidden rounded-lg border border-gray-200">
                         <img :src="topic.image_url" :alt="topic.title"
-                            class="w-[150px] object-cover h-[80px] sm:h-[90px] rounded-lg group-hover:scale-110 duration-300" />
+                            class="w-[200px] object-cover h-[80px] sm:h-[90px] rounded-lg group-hover:scale-110 duration-300" />
                     </div>
 
                     <div>
