@@ -13,11 +13,12 @@
                         <button @click="toggleDropdown"
                             class="w-full border border-gray-200 p-3 flex items-center justify-between gap-2 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
                             <span class="text-gray-600 text-sm sm:text-base">{{ selectedFilter }}</span>
-                            <ChevronDown class="w-5 h-5 text-gray-600 flex-shrink-0 transition-transform" :class="{ 'rotate-180': isDropdownOpen }" />
+                            <ChevronDown class="w-5 h-5 text-gray-600 flex-shrink-0 transition-transform"
+                                :class="{ 'rotate-180': isDropdownOpen }" />
                         </button>
 
                         <div v-if="isDropdownOpen"
-                            class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg">
                             <button v-for="filter in filterOptions" :key="filter.value" @click="selectFilter(filter)"
                                 class="w-full px-4 py-3 text-left hover:bg-gray-50 transition-colors text-sm sm:text-base cursor-pointer"
                                 :class="{ 'bg-blue-50 text-blue-600 font-medium': selectedFilter === filter.label }">
@@ -28,23 +29,53 @@
                 </div>
             </div>
 
-            <div v-if="filteredData.length > 0" class="space-y-3">
-                <div v-for="(quiz, index) in filteredData" :key="index"
+            <div v-if="loading" class="space-y-3">
+                <div v-for="i in 5" :key="i" class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+                        <div class="flex items-center gap-4 flex-1 min-w-0">
+                            <LoadingSkeleton type="square" width="64px" height="64px" class="rounded-lg" />
+                            <div class="min-w-0 flex-1 space-y-3">
+                                <LoadingSkeleton type="text" width="200px" height="24px" />
+                                <div class="flex items-center gap-2">
+                                    <LoadingSkeleton type="text" width="80px" height="20px" />
+                                    <LoadingSkeleton type="text" width="100px" height="20px" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden sm:flex items-center gap-3 sm:gap-4">
+                            <LoadingSkeleton type="square" width="70px" height="64px" class="rounded-xl" />
+                            <LoadingSkeleton type="square" width="70px" height="64px" class="rounded-xl" />
+                            <LoadingSkeleton type="square" width="70px" height="64px" class="rounded-xl" />
+                            <LoadingSkeleton type="square" width="70px" height="64px" class="rounded-xl" />
+                            <LoadingSkeleton type="square" width="90px" height="64px"
+                                class="rounded-xl hidden md:block" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else-if="filteredData.length > 0" class="space-y-3">
+                <div v-for="(attempt, index) in filteredData" :key="attempt.id"
                     v-motion="motionAnimation.createDelayedAnimation(motionAnimation.bottomToTop, 200 + index * 100)"
                     class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
 
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                         <div class="flex items-center gap-4 flex-1 min-w-0">
-                            <img :src="quiz.avatar" :alt="quiz.quizName"
-                                class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0" />
+                            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg flex items-center justify-center text-white font-bold text-2xl flex-shrink-0"
+                                :class="getScoreColor(attempt.score)">
+                                {{ attempt.score }}
+                            </div>
                             <div class="min-w-0 flex-1">
-                                <h3 class="font-bold text-lg sm:text-xl text-gray-800 truncate mb-1">{{ quiz.quizName }}
+                                <h3 class="font-bold text-lg sm:text-xl text-gray-800 truncate mb-1">
+                                    {{ attempt.quiz.title }}
                                 </h3>
                                 <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
-                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg font-medium">{{
-                                        quiz.category }}</span>
+                                    <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded-lg font-medium">
+                                        {{ attempt.quiz.category_quiz.name }}
+                                    </span>
                                     <span>•</span>
-                                    <span>{{ quiz.date }}</span>
+                                    <span>{{ formatDate(attempt.completed_at) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -53,27 +84,29 @@
                             <div
                                 class="text-center px-3 py-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl min-w-[70px]">
                                 <p class="text-xs text-blue-600 font-medium mb-1">Points</p>
-                                <p class="font-bold text-blue-600 text-lg">{{ quiz.point }}</p>
+                                <p class="font-bold text-blue-600 text-lg">{{ attempt.total_correct * 10 }}</p>
                             </div>
 
                             <div class="text-center px-3 py-2 bg-gray-50 rounded-xl min-w-[70px]">
                                 <p class="text-xs text-gray-500 font-medium mb-1">Questions</p>
-                                <p class="font-bold text-gray-700 text-lg">{{ quiz.question }}</p>
+                                <p class="font-bold text-gray-700 text-lg">{{ attempt.quiz.total_questions }}</p>
                             </div>
 
                             <div class="hidden sm:block text-center px-3 py-2 bg-green-50 rounded-xl min-w-[70px]">
                                 <p class="text-xs text-green-600 font-medium mb-1">Correct</p>
-                                <p class="font-bold text-green-600 text-lg">{{ quiz.correctAnswer }}</p>
+                                <p class="font-bold text-green-600 text-lg">{{ attempt.total_correct }}</p>
                             </div>
 
                             <div class="hidden sm:block text-center px-3 py-2 bg-red-50 rounded-xl min-w-[70px]">
                                 <p class="text-xs text-red-500 font-medium mb-1">Wrong</p>
-                                <p class="font-bold text-red-500 text-lg">{{ quiz.wrongAnswer }}</p>
+                                <p class="font-bold text-red-500 text-lg">
+                                    {{ attempt.quiz.total_questions - attempt.total_correct }}
+                                </p>
                             </div>
 
                             <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-xl">
                                 <Clock class="w-4 h-4 text-gray-500" />
-                                <span class="font-semibold text-gray-700">{{ quiz.time }}s</span>
+                                <span class="font-semibold text-gray-700">{{ calculateTime(attempt) }}m</span>
                             </div>
                         </div>
                     </div>
@@ -82,22 +115,24 @@
                         <div class="flex items-center gap-4">
                             <div class="text-center">
                                 <p class="text-xs text-green-600 font-medium mb-1">Correct</p>
-                                <p class="font-bold text-green-600">{{ quiz.correctAnswer }}</p>
+                                <p class="font-bold text-green-600">{{ attempt.total_correct }}</p>
                             </div>
                             <div class="text-center">
                                 <p class="text-xs text-red-500 font-medium mb-1">Wrong</p>
-                                <p class="font-bold text-red-500">{{ quiz.wrongAnswer }}</p>
+                                <p class="font-bold text-red-500">
+                                    {{ attempt.quiz.total_questions - attempt.total_correct }}
+                                </p>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg">
                             <Clock class="w-4 h-4 text-gray-500" />
-                            <span class="font-semibold text-gray-700 text-sm">{{ quiz.time }}s</span>
+                            <span class="font-semibold text-gray-700 text-sm">{{ calculateTime(attempt) }}m</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div v-else class="text-center">
+            <div v-else class="text-center py-10">
                 <h3 class="font-semibold text-gray-700 text-base sm:text-lg mb-1">
                     {{ searchQuery ? 'No Results Found' : 'No Quiz History Yet' }}
                 </h3>
@@ -110,56 +145,23 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Clock, Search, ChevronDown } from "lucide-vue-next";
-import motionAnimation from '../../animation/motionAnimation';
+import * as motionAnimation from '../../animation/motionAnimation';
+import LoadingSkeleton from '../../../components/ui/LoadingSkeleton.vue';
+import { getMyQuizHistory } from '../../../api/quizApi';
+import Swal from 'sweetalert2';
 
+const loading = ref(false);
 const searchQuery = ref('');
 const isDropdownOpen = ref(false);
 const selectedFilter = ref('Most Recent');
+const historyData = ref([]);
 
 const filterOptions = [
     { label: 'Most Recent', value: 'recent' },
+    { label: 'Highest Score', value: 'score' },
     { label: 'Highest Points', value: 'points' }
-];
-
-const leaderboardData = [
-    {
-        quizName: "Sejarah Indonesia",
-        avatar: "https://placehold.co/60x60",
-        category: "History",
-        question: 15,
-        time: 120,
-        point: 450,
-        correctAnswer: 12,
-        wrongAnswer: 3,
-        date: "Oct 1, 2025",
-        timestamp: new Date('2025-10-01').getTime()
-    },
-    {
-        quizName: "Mathematics Mastery",
-        avatar: "https://placehold.co/60x60",
-        category: "Math",
-        question: 20,
-        time: 150,
-        point: 620,
-        correctAnswer: 18,
-        wrongAnswer: 2,
-        date: "Sep 28, 2025",
-        timestamp: new Date('2025-09-28').getTime()
-    },
-    {
-        quizName: "Tech Fundamentals",
-        avatar: "https://placehold.co/60x60",
-        category: "Technology",
-        question: 10,
-        time: 90,
-        point: 300,
-        correctAnswer: 8,
-        wrongAnswer: 2,
-        date: "Sep 22, 2025",
-        timestamp: new Date('2025-09-22').getTime()
-    },
 ];
 
 const toggleDropdown = () => {
@@ -171,25 +173,70 @@ const selectFilter = (filter) => {
     isDropdownOpen.value = false;
 };
 
-const filteredData = computed(() => {
-    let result = [...leaderboardData];
+const getScoreColor = (score) => {
+    if (score === 100) return 'bg-gradient-to-br from-yellow-500 to-yellow-600';
+    if (score >= 80) return 'bg-gradient-to-br from-green-500 to-green-600';
+    if (score >= 60) return 'bg-gradient-to-br from-blue-500 to-blue-600';
+    if (score >= 40) return 'bg-gradient-to-br from-orange-500 to-orange-600';
+    return 'bg-gradient-to-br from-red-500 to-red-600';
+};
 
-    // Filter berdasarkan search query
+const calculateTime = (attempt) => {
+    const start = new Date(attempt.started_at);
+    const end = new Date(attempt.completed_at);
+    const minutes = Math.round((end - start) / 1000 / 60);
+    return minutes;
+};
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+};
+
+const filteredData = computed(() => {
+    let result = [...historyData.value];
+
     if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase();
-        result = result.filter(quiz =>
-            quiz.quizName.toLowerCase().includes(query) ||
-            quiz.category.toLowerCase().includes(query)
+        result = result.filter(attempt =>
+            attempt.quiz.title.toLowerCase().includes(query) ||
+            attempt.quiz.category_quiz.name.toLowerCase().includes(query)
         );
     }
 
-    // Sort berdasarkan filter yang dipilih
     if (selectedFilter.value === 'Most Recent') {
-        result.sort((a, b) => b.timestamp - a.timestamp);
+        result.sort((a, b) => new Date(b.completed_at) - new Date(a.completed_at));
+    } else if (selectedFilter.value === 'Highest Score') {
+        result.sort((a, b) => b.score - a.score);
     } else if (selectedFilter.value === 'Highest Points') {
-        result.sort((a, b) => b.point - a.point);
+        result.sort((a, b) => (b.total_correct * 10) - (a.total_correct * 10));
     }
 
     return result;
+});
+
+const fetchHistory = async () => {
+    try {
+        loading.value = true;
+        const response = await getMyQuizHistory(50);
+
+        if (response.success && response.data) {
+            historyData.value = response.data;
+        }
+    } catch (error) {
+        console.error('Error fetching quiz history:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to load quiz history. Please try again later.',
+        });
+    } finally {
+        loading.value = false;
+    }
+};
+
+onMounted(() => {
+    fetchHistory();
 });
 </script>
