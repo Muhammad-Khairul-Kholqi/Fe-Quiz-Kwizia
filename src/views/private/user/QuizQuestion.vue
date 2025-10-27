@@ -98,7 +98,7 @@ const handleFinish = async (answers) => {
             if (response.data.is_perfect) {
                 Swal.fire({
                     icon: 'success',
-                    title: '🎉 Perfect Score!',
+                    title: 'Perfect Score!',
                     text: response.message,
                     confirmButtonColor: '#3b82f6'
                 });

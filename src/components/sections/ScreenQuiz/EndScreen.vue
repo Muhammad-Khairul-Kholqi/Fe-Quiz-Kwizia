@@ -20,7 +20,7 @@
                             'px-4 py-2 rounded-lg',
                             resultData.is_perfect ? 'bg-yellow-50 text-yellow-600' : 'bg-green-50 text-green-600'
                         ]">
-                            <span>{{ resultData.is_perfect ? '🎉 Perfect Score!' : 'Quiz Completed' }}</span>
+                            <span>{{ resultData.is_perfect ? 'Perfect Score!' : 'Quiz Completed' }}</span>
                         </div>
                     </div>
 

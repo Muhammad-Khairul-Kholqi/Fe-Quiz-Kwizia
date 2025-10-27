@@ -20,12 +20,14 @@
                     </div>
 
                     <div class="hidden lg:block lg:w-[30%]">
-                        <PopularSection :popular-quizzes="popularQuizzes" @play-quiz="handlePlayQuiz" />
+                        <PopularSection :popular-quizzes="popularQuizzes" :is-loading="isLoading"
+                            @play-quiz="handlePlayQuiz" />
                     </div>
                 </div>
 
                 <div class="lg:hidden mt-5">
-                    <PopularSection :popular-quizzes="popularQuizzes" @play-quiz="handlePlayQuiz" />
+                    <PopularSection :popular-quizzes="popularQuizzes" :is-loading="isLoading"
+                        @play-quiz="handlePlayQuiz" />
                 </div>
             </div>
         </div>
@@ -155,14 +157,17 @@ const filteredQuizzes = computed(() => {
 });
 
 const popularQuizzes = computed(() => {
-    return [...quizzes.value]
+    const popularOnly = quizzes.value.filter(quiz => quiz.plays > 20);
+
+    return popularOnly
         .sort((a, b) => b.plays - a.plays)
-        .slice(0, 3)
+        .slice(0, 5)
         .map(quiz => ({
             id: quiz.id,
             image: quiz.image,
             subject: quiz.subject,
-            title: quiz.title
+            title: quiz.title,
+            plays: quiz.plays
         }));
 });
 

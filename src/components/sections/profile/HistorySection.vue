@@ -34,7 +34,6 @@
                     class="bg-white border border-gray-200 rounded-2xl p-5 sm:p-6">
 
                     <div class="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
-                        <!-- Avatar & Info -->
                         <div class="flex items-center gap-4 flex-1 min-w-0">
                             <img :src="quiz.avatar" :alt="quiz.quizName"
                                 class="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0" />
@@ -50,7 +49,6 @@
                             </div>
                         </div>
 
-                        <!-- Stats Grid -->
                         <div class="flex items-center gap-3 sm:gap-4">
                             <div
                                 class="text-center px-3 py-2 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl min-w-[70px]">
@@ -80,7 +78,6 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Stats -->
                     <div class="sm:hidden flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                         <div class="flex items-center gap-4">
                             <div class="text-center">
