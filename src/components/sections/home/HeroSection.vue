@@ -66,12 +66,18 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { ArrowUpRight, Users } from 'lucide-vue-next';
+import { ArrowUpRight } from 'lucide-vue-next';
 import * as motionAnimation from "../../animation/motionAnimation"
 import authApi from '../../../api/authApi';
+import { getPublicStats } from '../../../api/statsApi'; 
 
 const router = useRouter();
 const isAuthenticated = ref(true);
+const staticsData = ref([
+    { number: '0', label: 'USERS WORLDWIDE' },
+    { number: '0', label: 'FUN QUIZZES' },
+    { number: '0', label: 'INSIGHTFUL BLOGS' },
+]);
 
 const checkAuthStatus = () => {
     isAuthenticated.value = authApi.isAuthenticated();
@@ -81,13 +87,21 @@ watch(() => router.currentRoute.value, () => {
     checkAuthStatus();
 });
 
+const fetchPublicStats = async () => {
+    const res = await getPublicStats();
+    if (res?.success && res?.data) {
+        staticsData.value = [
+            { number: res.data.total_users.toLocaleString(), label: 'USERS WORLDWIDE' },
+            { number: res.data.total_quizzes.toLocaleString(), label: 'FUN QUIZZES' },
+            { number: res.data.total_blogs.toLocaleString(), label: 'INSIGHTFUL BLOGS' },
+        ];
+    } else {
+        console.error('Failed to load public stats');
+    }
+};
+
 onMounted(() => {
     checkAuthStatus();
+    fetchPublicStats();
 });
-
-const staticsData = [
-    { number: '100K+', label: 'USERS WORLDWIDE' },
-    { number: '200', label: 'FUN QUIZZES' },
-    { number: '150', label: 'INSIGHTFUL BLOGS' },
-]
 </script>
